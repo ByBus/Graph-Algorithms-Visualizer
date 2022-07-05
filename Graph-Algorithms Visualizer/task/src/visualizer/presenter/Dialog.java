@@ -3,15 +3,25 @@ package visualizer.presenter;
 import javax.swing.*;
 
 public class Dialog {
+    private final String message;
+    private final String title;
+    private final Checker checker;
     private Callback callback;
 
+    public Dialog(String message, String title, Checker checker) {
+        this.message = message;
+        this.title = title;
+        this.checker = checker;
+    }
     public void show() {
         String result = JOptionPane.showInputDialog(null,
-                "Enter the Vertex ID (Should be 1 char):",
-                "Vertex",
+                message,
+                title,
                 JOptionPane.QUESTION_MESSAGE);
         try {
-            if (!result.isBlank() && result.length() == 1) {
+            if (result == null) {
+                callback.onCancel();
+            } else if (checker.check(result)) {
                 callback.onSuccess(result);
             } else {
                 callback.onFailed();
@@ -28,5 +38,6 @@ public class Dialog {
     public interface Callback {
         void onSuccess(String index);
         void onFailed();
+        void onCancel();
     }
 }
