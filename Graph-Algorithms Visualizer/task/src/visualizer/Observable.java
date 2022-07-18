@@ -1,17 +1,14 @@
 package visualizer;
 
-import visualizer.data.Edge;
-import visualizer.data.Vertex;
 import visualizer.data.Observer;
-
-import javax.swing.*;
+import visualizer.data.VertexDataModel;
 
 public interface Observable {
     void addObserver(Observer observer);
 
-    void addVertex(Vertex vertex);
+    void addVertex(VertexDataModel vertex);
 
-    void addEdge(Edge edge);
+    void addEdge(VertexDataModel start, VertexDataModel end, int weight);
 
-    void notifyObservers(JComponent component);
+    void notifyObservers();
 }

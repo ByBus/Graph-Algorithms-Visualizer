@@ -1,4 +1,4 @@
-package visualizer.data;
+package visualizer.data.checker;
 
 import visualizer.presenter.Checker;
 

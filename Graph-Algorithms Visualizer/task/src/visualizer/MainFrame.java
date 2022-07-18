@@ -1,9 +1,23 @@
 package visualizer;
 
-import visualizer.data.*;
-import visualizer.domain.AddVertexUseCase;
-import visualizer.domain.CreateEdgeUseCase;
+import visualizer.data.Graph;
+import visualizer.data.GraphHistory;
+import visualizer.data.Observer;
+import visualizer.data.TestGraphData;
+import visualizer.data.checker.IndexChecker;
+import visualizer.data.checker.MultiChecker;
+import visualizer.data.checker.UniqueVertexChecker;
+import visualizer.data.checker.WeightChecker;
+import visualizer.domain.ClickListenerAdder;
+import visualizer.domain.Command;
+import visualizer.domain.Controller;
 import visualizer.domain.Mode;
+import visualizer.domain.algorithm.AlgorithmWorker;
+import visualizer.domain.algorithm.AlgorithmWorkerFactory;
+import visualizer.domain.algorithm.BreadthFirst;
+import visualizer.domain.algorithm.DepthFirst;
+import visualizer.domain.usecases.*;
+import visualizer.presenter.*;
 import visualizer.presenter.Dialog;
 import visualizer.presenter.MenuBar;
 
@@ -15,10 +29,12 @@ public class MainFrame extends JFrame implements Observer {
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = 600;
     public static final int VERTEX_RADIUS = 25;
-    private final JPanel canvas = new GraphCanvas("Graph");
-    private Mode mode = Mode.ADD_VERTEX;
-    private AddVertexUseCase addVertexUseCase;
-    private CreateEdgeUseCase createEdgeUseCase;
+    private final Controller commandController = new Controller();
+    private final ClickListenerAdder clickAdder = new ClickListenerAdder(commandController);
+    private final GraphCanvas canvas = new GraphCanvas("Graph", clickAdder);
+    private final GraphCanvasAdapter adapter = new GraphCanvasAdapter(canvas);
+    private final Graph graph = new Graph();
+    private final GraphHistory graphHistory = new GraphHistory(graph);
 
     public MainFrame() {
         super("Graph-Algorithms Visualizer");
@@ -29,13 +45,16 @@ public class MainFrame extends JFrame implements Observer {
     }
 
     private void init() {
-        Graph graph = new Graph();
         graph.addObserver(this);
 
         MenuBar menu = new MenuBar();
         setJMenuBar(menu);
 
-        JLabel currentMode = new JLabel(mode.label, SwingConstants.RIGHT);
+        JLabel progressLabel = new JLabel("333", SwingConstants.CENTER);
+        progressLabel.setName("Display");
+        add(progressLabel, BorderLayout.SOUTH);
+
+        JLabel currentMode = new JLabel(Mode.ADD_VERTEX.label, SwingConstants.RIGHT);
         currentMode.setName("Mode");
         currentMode.setBorder(new EmptyBorder(0,10,0,10));
         add(currentMode, BorderLayout.NORTH);
@@ -44,55 +63,89 @@ public class MainFrame extends JFrame implements Observer {
         Dialog inputIndexDialog = new Dialog(
                 "Enter the Vertex ID (Should be 1 char):",
                 "Vertex",
-                new IndexChecker());
+                new MultiChecker(new IndexChecker(), new UniqueVertexChecker(graph)));
         Dialog inputWeightDialog = new Dialog(
             "Enter Weight",
                 "Input",
                 new WeightChecker()
         );
-
+        LabelMaster progressLabelMaster = new LabelMaster(progressLabel);
         add(canvas);
 
-        addVertexUseCase = new AddVertexUseCase(canvas, inputIndexDialog, graph);
-        createEdgeUseCase = new CreateEdgeUseCase(inputWeightDialog, graph);
+
+        Command addVertexUseCase = new AddVertexUseCase(inputIndexDialog, graph);
+        Command createEdgeUseCase = new CreateEdgeUseCase(inputWeightDialog, graph);
+        Command noneCommand = new NoneUseCase();
+        Command removeVertexUseCase = new RemoveVertexUseCase(canvas, graph);
+        Command removeEdgeUseCase = new RemoveEdgeUseCase(canvas, graph);
+        Command breadthFirstTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new BreadthFirst(graph)),
+                progressLabelMaster,
+                canvas,
+                graphHistory);
+        Command depthFirstTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new DepthFirst(graph)),
+                progressLabelMaster,
+                canvas,
+                graphHistory);
+
+        commandController.setCommand(addVertexUseCase);
 
         menu.setAddVertexItemAction(e -> {
-            mode = Mode.ADD_VERTEX;
-            currentMode.setText(mode.label);
-            updateUseCasesMode();
+            currentMode.setText(Mode.ADD_VERTEX.label);
+            commandController.setCommand(addVertexUseCase);
         });
 
         menu.setCreateEdgeItemAction(e -> {
-            mode = Mode.ADD_EDGE;
-            currentMode.setText(mode.label);
-            updateUseCasesMode();
+            currentMode.setText(Mode.ADD_EDGE.label);
+            commandController.setCommand(createEdgeUseCase);
+        });
+
+        menu.setRemoveEdgeItemAction(e -> {
+            currentMode.setText(Mode.REMOVE_EDGE.label);
+            commandController.setCommand(removeEdgeUseCase);
+        });
+
+        menu.setRemoveVertexItemAction(e -> {
+            currentMode.setText(Mode.REMOVE_VERTEX.label);
+            commandController.setCommand(removeVertexUseCase);
         });
 
         menu.setNoneItemAction(e -> {
-            mode = Mode.NONE;
-            currentMode.setText(mode.label);
-            updateUseCasesMode();
+            currentMode.setText(Mode.NONE.label);
+            commandController.setCommand(noneCommand);
         });
-        setVisible(true);
-    }
 
-    private void updateUseCasesMode() {
-        addVertexUseCase.setMode(mode);
-        createEdgeUseCase.setMode(mode);
+        menu.setNewItemAction(e -> {
+            graphHistory.clear();
+            graph.clear();
+        });
+
+        menu.setExitItemAction(e -> {
+            dispose();
+            System.exit(0);
+        });
+
+        menu.setBreadthFirstSearchItemAction(e -> {
+            currentMode.setText(Mode.NONE.label);
+            commandController.setCommand(breadthFirstTraverseUseCase);
+            progressLabelMaster.setPrefix("BFS");
+            progressLabelMaster.initMessage();
+        });
+
+        menu.setDepthFirstSearchItemAction(e -> {
+            currentMode.setText(Mode.NONE.label);
+            commandController.setCommand(depthFirstTraverseUseCase);
+            progressLabelMaster.setPrefix("DFS");
+            progressLabelMaster.initMessage();
+        });
+
+        setVisible(true);
+
+//        var test = new TestGraphData(graph);
+//        test.setup();
     }
 
     @Override
-    public void update(JComponent component) {
-        if (component instanceof Vertex) {
-            createEdgeUseCase.addVertexListener((Vertex) component);
-        }
-        if (component instanceof Edge) {
-            canvas.add(((Edge) component).label());
-            canvas.add(((Edge) component).reverse());
-        }
-        canvas.add(component);
-
-        revalidate();
-        repaint();
+    public void update(Graph graph) {
+        adapter.submitGraph(graph);
     }
 }
