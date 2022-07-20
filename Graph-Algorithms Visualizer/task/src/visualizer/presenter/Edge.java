@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 
 public class Edge extends JComponent implements Selectable, RefreshableComponent {
+    private static final int LINE_WIDTH = 4;
     public final VertexUI start;
     public final VertexUI end;
     public final int weight;
@@ -36,7 +37,7 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
     private void createBounds() {
         AxisHolder xAxis = new AxisHolder(start.getXPos(true), end.getXPos(true)).sort();
         AxisHolder yAxis = new AxisHolder(start.getYPos(true), end.getYPos(true)).sort();
-        setBounds(xAxis.first(), yAxis.first(), xAxis.delta(), yAxis.delta());
+        setBounds(xAxis.first() - LINE_WIDTH / 2, yAxis.first() - LINE_WIDTH / 2, Math.max(LINE_WIDTH, xAxis.delta()), Math.max(LINE_WIDTH, yAxis.delta()));
     }
 
     public JLabel label() {
@@ -49,14 +50,16 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
     @Override
     public void refresh() {
         createBounds();
+        if (label != null) label.refresh();
     }
 
     @Override
     public void paintComponent(Graphics g) {
+        refresh();
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setStroke(new BasicStroke(3));
+        g2.setStroke(new BasicStroke(LINE_WIDTH));
         g2.setColor((highLight) ? Style.SELECTION_COLOR : Style.LINE_COLOR);
         g2.draw(createLine());
     }

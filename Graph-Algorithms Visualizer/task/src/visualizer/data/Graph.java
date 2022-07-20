@@ -6,15 +6,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Graph implements Observable {
-    private final Map<VertexDataModel, Map<VertexDataModel, Integer>> graph = new HashMap<>();
+public class Graph extends SavableGraph implements Observable {
     private final List<Observer> observers = new ArrayList<>();
 
     @Override
     public void addObserver(Observer observer) {
         observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        observers.forEach(observer -> observer.update(this));
     }
 
     public void addVertex(VertexDataModel vertex) {
@@ -59,11 +67,6 @@ public class Graph implements Observable {
     }
 
     @Override
-    public void notifyObservers() {
-        observers.forEach(observer -> observer.update(this));
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (var entry : graph.entrySet()) {
@@ -74,71 +77,8 @@ public class Graph implements Observable {
         return sb.toString();
     }
 
-    public GraphState getState() {
-        var states = graph.entrySet()
-                .stream()
-                .map(entry -> new GraphState.VertexState(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-        return new GraphState(states);
-    }
-
-    public void setState(GraphState state) {
-        if (graph.isEmpty()) return;
-        for (var vertState : state.vertexStates) {
-            var oldVertex = graph.keySet().stream()
-                    .filter(v -> v.getIndex().equals(vertState.vertex.getIndex()))
-                    .findFirst().orElse(vertState.vertex);
-            oldVertex.setParameters(vertState.x, vertState.y, vertState.isSelected);
-            var adjacent = graph.get(oldVertex);
-            adjacent.forEach((key, value) -> adjacent.put(key, vertState.connections.get(key)));
-        }
-        notifyObservers();
-    }
-
     public void clear() {
         graph.clear();
         notifyObservers();
-    }
-
-    static class GraphState {
-        private final List<VertexState> vertexStates = new ArrayList<>();
-
-        @Override
-        public String toString() {
-            return "GraphState{" +
-                    "vertexStates=" + vertexStates +
-                    '}';
-        }
-
-        private GraphState(List<VertexState> states) {
-            this.vertexStates.addAll(states);
-        }
-
-        private static class VertexState {
-            private final VertexDataModel vertex;
-            private final Map<VertexDataModel, Integer> connections = new HashMap<>();
-            public final boolean isSelected;
-            private final int x;
-            private final int y;
-
-            public VertexState(VertexDataModel vertex, Map<VertexDataModel, Integer> adjacent) {
-                adjacent.forEach(((vertexDataModel, weight) -> {
-                    connections.put(vertexDataModel.copy(), weight);
-                }));
-                this.vertex = vertex;
-                this.x = vertex.getX();
-                this.y = vertex.getY();
-                this.isSelected = vertex.isHighlighted();
-            }
-
-            @Override
-            public String toString() {
-                return "VertexState{" +
-                        "vertex=" + vertex +
-                        ", connections=" + connections +
-                        ", isSelected=" + isSelected +
-                        '}';
-            }
-        }
     }
 }

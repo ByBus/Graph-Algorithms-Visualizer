@@ -3,11 +3,11 @@ package visualizer.data;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class GraphHistory {
-    private final Graph graph;
-    private final Deque<Graph.GraphState> memory = new ArrayDeque<>();
+public class GraphHistory<T> {
+    private final Savable<T> graph;
+    private final Deque<T> memory = new ArrayDeque<>();
 
-    public GraphHistory(Graph graph) {
+    public GraphHistory(Savable<T> graph) {
         this.graph = graph;
     }
 

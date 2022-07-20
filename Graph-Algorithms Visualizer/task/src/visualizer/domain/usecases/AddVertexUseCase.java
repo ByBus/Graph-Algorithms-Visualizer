@@ -4,8 +4,8 @@ import visualizer.MainFrame;
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
 import visualizer.domain.Command;
-import visualizer.presenter.GraphCanvas;
 import visualizer.presenter.Dialog;
+import visualizer.presenter.GraphCanvas;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

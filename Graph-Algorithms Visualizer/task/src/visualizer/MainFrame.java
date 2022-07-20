@@ -1,9 +1,6 @@
 package visualizer;
 
-import visualizer.data.Graph;
-import visualizer.data.GraphHistory;
-import visualizer.data.Observer;
-import visualizer.data.TestGraphData;
+import visualizer.data.*;
 import visualizer.data.checker.IndexChecker;
 import visualizer.data.checker.MultiChecker;
 import visualizer.data.checker.UniqueVertexChecker;
@@ -12,14 +9,13 @@ import visualizer.domain.ClickListenerAdder;
 import visualizer.domain.Command;
 import visualizer.domain.Controller;
 import visualizer.domain.Mode;
-import visualizer.domain.algorithm.AlgorithmWorker;
 import visualizer.domain.algorithm.AlgorithmWorkerFactory;
 import visualizer.domain.algorithm.BreadthFirst;
 import visualizer.domain.algorithm.DepthFirst;
 import visualizer.domain.usecases.*;
-import visualizer.presenter.*;
 import visualizer.presenter.Dialog;
 import visualizer.presenter.MenuBar;
+import visualizer.presenter.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -30,11 +26,12 @@ public class MainFrame extends JFrame implements Observer {
     public static final int WINDOW_HEIGHT = 600;
     public static final int VERTEX_RADIUS = 25;
     private final Controller commandController = new Controller();
-    private final ClickListenerAdder clickAdder = new ClickListenerAdder(commandController);
+    private final CollisionManager collisionManager = new CollisionManager();
+    private final ClickListenerAdder clickAdder = new ClickListenerAdder(commandController, collisionManager);
     private final GraphCanvas canvas = new GraphCanvas("Graph", clickAdder);
     private final GraphCanvasAdapter adapter = new GraphCanvasAdapter(canvas);
     private final Graph graph = new Graph();
-    private final GraphHistory graphHistory = new GraphHistory(graph);
+    private final GraphHistory<SavableGraph.GraphState> graphHistory = new GraphHistory<>(graph);
 
     public MainFrame() {
         super("Graph-Algorithms Visualizer");
@@ -140,8 +137,8 @@ public class MainFrame extends JFrame implements Observer {
 
         setVisible(true);
 
-//        var test = new TestGraphData(graph);
-//        test.setup();
+        var test = new TestGraphData(graph, this);
+        test.setup();
     }
 
     @Override

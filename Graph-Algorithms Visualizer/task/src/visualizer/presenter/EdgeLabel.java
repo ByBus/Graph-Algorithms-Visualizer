@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EdgeLabel extends JLabel implements RefreshableComponent, Selectable {
-    private final VertexUI start;
-    private final VertexUI end;
-    private final Font font = new Font("Courier", Font.BOLD, 25);
+    public final VertexUI start;
+    public final VertexUI end;
+    private final Font font = new Font("Courier", Font.BOLD, 14);
     private boolean isHighlighted = false;
 
     public EdgeLabel(String text, VertexUI start, VertexUI end) {

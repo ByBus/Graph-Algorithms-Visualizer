@@ -15,6 +15,7 @@ public class GraphCanvas extends JPanel {
 
     public GraphCanvas(String name, ClickListenerAdder clickAdder) {
         this.clickAdder = clickAdder;
+        setDoubleBuffered(true);
         setName(name);
         setLayout(null);
         clickAdder.add(this);
@@ -55,12 +56,16 @@ public class GraphCanvas extends JPanel {
                 }
             } else {
                 add(component);
-                if (!(component instanceof EdgeLabel)) {
+                //if (!(component instanceof EdgeLabel)) {
                     clickAdder.add(component);
-                }
+                //}
             }
         });
         return existingComponents;
+    }
+
+    private void select(Selectable source, Selectable target) {
+        target.select(source.isSelected());
     }
 
     private void removeExcessiveComponents(List<String> existingComponentNames) {

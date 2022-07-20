@@ -17,8 +17,7 @@ public class BreadthFirst extends TraversalAlgorithm implements Algorithm {
 
     @Override
     public void traverse(VertexDataModel start) {
-        Map<VertexDataModel, Integer> distance = new HashMap<>();
-        distance.put(start, 0);
+        Map<VertexDataModel, Integer> distance = new HashMap<>(Map.of(start, 0));
         queue.add(start);
         visited.add(start);
 

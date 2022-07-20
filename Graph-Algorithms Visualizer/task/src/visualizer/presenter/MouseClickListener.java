@@ -3,10 +3,8 @@ package visualizer.presenter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-@FunctionalInterface
+
 public interface MouseClickListener extends MouseListener {
-    @Override
-    default void mousePressed(MouseEvent e) { }
 
     @Override
     default void mouseReleased(MouseEvent e) { }

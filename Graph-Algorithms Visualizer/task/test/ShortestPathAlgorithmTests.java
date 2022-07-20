@@ -111,7 +111,7 @@ enum ComponentType {
 }
 
 @SuppressWarnings("unused")
-public class GraphTraversalAlgorithmTests extends SwingTest {
+public class ShortestPathAlgorithmTests extends SwingTest {
 
     @SwingComponent(name = "Graph")
     private JPanelFixture graph;
@@ -146,10 +146,13 @@ public class GraphTraversalAlgorithmTests extends SwingTest {
     @SwingComponent(name = "Depth-First Search")
     private JMenuItemFixture depthFirstSearch;
 
+    @SwingComponent(name = "Dijkstra's Algorithm")
+    private JMenuItemFixture dijkstraAlgorithm;
+
     @SwingComponent(name = "Display")
     private JLabelFixture display;
 
-    public GraphTraversalAlgorithmTests() {
+    public ShortestPathAlgorithmTests() {
         super(new MainFrame());
     }
 
@@ -442,8 +445,7 @@ public class GraphTraversalAlgorithmTests extends SwingTest {
         checkVertexLabelCount(vertices);
         checkEdgeLabelCount(edges);
 
-        runAlgorithm(data, depthFirstSearch, data.getDFSText());
-        runAlgorithm(data, breadthFirstSearch, data.getBFSText());
+        runAlgorithm(data, dijkstraAlgorithm, data.getDijkstraText());
 
         newMenuItem.click();
 
@@ -466,11 +468,11 @@ public class GraphTraversalAlgorithmTests extends SwingTest {
 
         int totalTime = 0;
         while (display.text().contains("Please wait...")) {
-          if (totalTime > 60000) {
-            throw new WrongAnswer("Algorithm Running for more than 1 min");
-          }
-          Utils.sleep(100);
-          totalTime += 100;
+            if (totalTime > 60000) {
+                throw new WrongAnswer("Algorithm Running for more than 1 min");
+            }
+            Utils.sleep(100);
+            totalTime += 100;
         }
 
         if (!display.text().contains(answer))

@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/587437/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: Mon, 18 Jul 2022 15:57:02 UTC
+update_date: Wed, 20 Jul 2022 15:27:43 UTC
 stages:
 - id: 1032
   step: 15624
@@ -138,6 +138,8 @@ topics:
     theory_id: 15090
   - title: Pseudocode basics
     theory_id: 19510
+  - title: Complex constructions in pseudocode
+    theory_id: 20922
   - title: Libraries
     theory_id: 8504
   - title: Introduction to generic programming
@@ -241,14 +243,14 @@ topics:
     theory_id: 3770
   - title: The Collections Framework overview
     theory_id: 3624
-  - title: Generic methods
-    theory_id: 3606
-  - title: Type Bounds
-    theory_id: 8216
   - title: ArrayList
     theory_id: 3567
   - title: The List interface
     theory_id: 3581
+  - title: Generic methods
+    theory_id: 3606
+  - title: Type Bounds
+    theory_id: 8216
   - title: Threads as objects
     theory_id: 4875
   - title: Custom threads
