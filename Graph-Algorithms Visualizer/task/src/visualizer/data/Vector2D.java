@@ -2,7 +2,7 @@ package visualizer.data;
 
 import java.awt.*;
 
-public class Vector2D {
+public class Vector2D implements Comparable<Vector2D>{
     public final double x;
     public final double y;
     public final double modulus;
@@ -42,5 +42,10 @@ public class Vector2D {
 
     public Point toPoint() {
         return new Point((int) Math.round(x), (int) Math.round(y));
+    }
+
+    @Override
+    public int compareTo(Vector2D o) {
+        return Double.compare(modulus, o.modulus);
     }
 }

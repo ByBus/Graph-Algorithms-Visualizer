@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class CollisionManager {
     private final static double VERTEX_VIOLATION_DISTANCE = MainFrame.VERTEX_RADIUS * 2.0;
-    private final static double VERTEX_JUMP_BACK_DISTANCE = VERTEX_VIOLATION_DISTANCE + 1;
     private final Set<Rectangle> collisions = new HashSet<>();
 
     public void onDragStart(Draggable vertex, Point point) {
@@ -42,9 +41,11 @@ public class CollisionManager {
         Point newPosition = vertex.position();
         newPosition.translate(position.x - vertex.getClickCoordinates().x, position.y - vertex.getClickCoordinates().y);
         // Check collision with other components
-        collisions.stream().filter(comp -> comp.intersects(vertex.boundingBox())).forEach(comp -> {
-            if (isDistanceViolated(vertex.boundingBox(), comp)) {
-                Point pos = calculateNewPosition(vertex.boundingBox(), comp);
+        collisions.forEach(comp -> {
+            var a = new Vector2D(newPosition.x + vertex.width() / 2.0, newPosition.y + vertex.height() / 2.0);
+            var b = new Vector2D(comp.x + comp.width / 2.0, comp.y + comp.height / 2.0);
+            if (a.minus(b).modulus <= VERTEX_VIOLATION_DISTANCE) {
+                Point pos = calculatePosition(a, b);
                 newPosition.x = pos.x - vertex.width() / 2 ;
                 newPosition.y = pos.y - vertex.height() / 2;
             }
@@ -56,18 +57,8 @@ public class CollisionManager {
         vertex.setClickCoordinates(position);
     }
 
-    private Point calculateNewPosition(Rectangle vertex, Rectangle other) {
-        Vector2D a = new Vector2D(findCenter(vertex));
-        Vector2D b = new Vector2D(findCenter(other));
+    private Point calculatePosition(Vector2D a, Vector2D b) {
         var c = b.minus(a);
-        return c.invert().withModulus(VERTEX_JUMP_BACK_DISTANCE - c.modulus).plus(a).toPoint();
-    }
-
-    private boolean isDistanceViolated(Rectangle vert, Rectangle other) {
-        return findCenter(other).distance(findCenter(vert)) <= VERTEX_VIOLATION_DISTANCE;
-    }
-
-    private Point findCenter(Rectangle rect) {
-        return new Point(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return c.invert().withModulus(VERTEX_VIOLATION_DISTANCE - c.modulus).plus(a).toPoint();
     }
 }

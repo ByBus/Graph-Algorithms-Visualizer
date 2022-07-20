@@ -25,7 +25,7 @@ public class TestGraphData {
 
     public void setup() {
         before();
-        circleGraph(6, 0, 3, 90,'A');
+        circleGraph(16, 3, 6, 90,'A');
         //defaultGraph();
         //mazeGraph();
         after();
