@@ -15,6 +15,7 @@ public class MenuBar extends JMenuBar {
 
     private final JMenuItem depthFirstSearchMenuItem = new MenuItem("Depth-First Search");
     private final JMenuItem breadthFirstSearchMenuItem = new MenuItem("Breadth-First Search");
+    private final JMenuItem dijkstraSearchMenuItem = new MenuItem("Dijkstra's Algorithm");
 
     public MenuBar() {
         setName("MenuBar");
@@ -38,6 +39,7 @@ public class MenuBar extends JMenuBar {
         JMenu algorithmMenu = new JMenu("Algorithms");
         algorithmMenu.add(depthFirstSearchMenuItem);
         algorithmMenu.add(breadthFirstSearchMenuItem);
+        algorithmMenu.add(dijkstraSearchMenuItem);
         add(algorithmMenu);
     }
 
@@ -75,5 +77,9 @@ public class MenuBar extends JMenuBar {
 
     public void setBreadthFirstSearchItemAction(ActionListener action) {
         breadthFirstSearchMenuItem.addActionListener(action);
+    }
+
+    public void setDijkstraSearchMenuItemAction(ActionListener action) {
+        dijkstraSearchMenuItem.addActionListener(action);
     }
 }

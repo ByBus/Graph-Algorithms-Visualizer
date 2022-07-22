@@ -1,13 +1,11 @@
 package visualizer.presenter;
 
-import visualizer.domain.Path;
-
 import javax.swing.*;
 
 public class LabelMaster {
     private static final String INIT_MESSAGE = "Please choose a starting vertex";
     private static final String WAIT_MESSAGE = "Please wait...";
-    private String prefix;
+    private String prefix = "";
     private final JLabel label;
 
     public LabelMaster(JLabel label) {
@@ -31,11 +29,11 @@ public class LabelMaster {
 
     public void showPath(Path path) {
         setEnable(true);
-        label.setText(prefix + " : " + path);
+        label.setText(prefix + path);
     }
 
     public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        this.prefix = prefix + (prefix.isEmpty() ? "" : " : ");
     }
 
     private void setEnable(boolean value) {

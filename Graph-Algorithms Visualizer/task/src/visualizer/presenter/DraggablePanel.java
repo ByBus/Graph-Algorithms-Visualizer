@@ -1,6 +1,6 @@
 package visualizer.presenter;
 
-import visualizer.domain.Draggable;
+import visualizer.presenter.drag.Draggable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,16 +24,6 @@ abstract class DraggablePanel extends JPanel implements Draggable {
     @Override
     public Container container() {
         return getParent();
-    }
-
-    @Override
-    public int width() {
-        return getWidth();
-    }
-
-    @Override
-    public int height() {
-        return getHeight();
     }
 
     @Override

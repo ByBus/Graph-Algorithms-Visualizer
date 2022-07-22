@@ -2,7 +2,8 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
-import visualizer.domain.Path;
+import visualizer.domain.SpanningTree;
+import visualizer.presenter.Path;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 abstract class TraversalAlgorithm implements Algorithm{
     protected final Set<VertexDataModel> visited = new HashSet<>();
     protected final Graph graph;
-    protected Path path = new Path();
+    protected Path path = new SpanningTree();
     protected SubStepAction action = () -> { };
 
     public TraversalAlgorithm(Graph graph) {
@@ -46,6 +47,6 @@ abstract class TraversalAlgorithm implements Algorithm{
     @Override
     public void reset() {
         visited.clear();
-        path = new Path();
+        path = new SpanningTree();
     }
 }

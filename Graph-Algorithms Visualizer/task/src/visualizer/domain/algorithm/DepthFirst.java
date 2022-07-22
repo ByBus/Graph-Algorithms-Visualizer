@@ -3,8 +3,6 @@ package visualizer.domain.algorithm;
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
 
-import java.util.Map;
-
 public class DepthFirst extends TraversalAlgorithm implements Algorithm {
 
     public DepthFirst(Graph graph) {
@@ -35,4 +33,6 @@ public class DepthFirst extends TraversalAlgorithm implements Algorithm {
     public void reset() {
         super.reset();
     }
+
+
 }

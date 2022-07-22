@@ -1,6 +1,7 @@
 package visualizer.presenter;
 
 import visualizer.data.AxisHolder;
+import visualizer.domain.SelectState;
 import visualizer.domain.Selectable;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
     public final VertexUI end;
     public final int weight;
     private EdgeLabel label = null;
-    private boolean highLight = false;
+    private SelectState selectState = SelectState.DEFAULT;
 
     public Edge(VertexUI start, VertexUI end, int weight) {
         this.start = start;
@@ -24,7 +25,7 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
 
     public Edge(VertexUI start, VertexUI end, boolean isSelected) {
         this(start, end, 0);
-        highLight = isSelected;
+        selectState = isSelected ? SelectState.SELECTED : SelectState.DEFAULT;
     }
 
     private void init() {
@@ -37,7 +38,11 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
     private void createBounds() {
         AxisHolder xAxis = new AxisHolder(start.getXPos(true), end.getXPos(true)).sort();
         AxisHolder yAxis = new AxisHolder(start.getYPos(true), end.getYPos(true)).sort();
-        setBounds(xAxis.first() - LINE_WIDTH / 2, yAxis.first() - LINE_WIDTH / 2, Math.max(LINE_WIDTH, xAxis.delta()), Math.max(LINE_WIDTH, yAxis.delta()));
+        setBounds(xAxis.first() - LINE_WIDTH / 2,
+                yAxis.first() - LINE_WIDTH / 2,
+                Math.max(LINE_WIDTH, xAxis.delta()),
+                Math.max(LINE_WIDTH, yAxis.delta())
+        );
     }
 
     public JLabel label() {
@@ -55,12 +60,12 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
 
     @Override
     public void paintComponent(Graphics g) {
-        refresh();
         super.paintComponent(g);
+        refresh();
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(LINE_WIDTH));
-        g2.setColor((highLight) ? Style.SELECTION_COLOR : Style.LINE_COLOR);
+        g2.setColor((selectState == SelectState.SELECTED) ? Style.SELECTION_COLOR : Style.LINE_COLOR);
         g2.draw(createLine());
     }
 
@@ -78,13 +83,13 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
     }
 
     @Override
-    public void select(boolean value) {
-        highLight = value;
+    public void select(SelectState state) {
+        selectState = state;
     }
 
     @Override
-    public boolean isSelected() {
-        return highLight;
+    public SelectState getSelected() {
+        return selectState;
     }
 
 }

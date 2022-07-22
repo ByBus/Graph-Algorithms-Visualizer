@@ -47,7 +47,7 @@ public class GraphCanvasAdapter {
     private VertexUI getExistingVertexUi(VertexDataModel vertex) {
         var canvasVertex = canvas.getNamedComponent(vertex.toVertexUI().getName());
         var foundVertex = canvasVertex != null ? (VertexUI) canvasVertex : vertexUiFromBuffer(vertex.getIndex());
-        foundVertex.setSelected(vertex.isHighlighted());
+        foundVertex.setSelected(vertex.toVertexUI().getSelected());
         return foundVertex;
     }
 

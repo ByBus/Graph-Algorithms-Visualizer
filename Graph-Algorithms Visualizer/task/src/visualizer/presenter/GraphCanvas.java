@@ -1,6 +1,7 @@
 package visualizer.presenter;
 
 import visualizer.domain.ClickListenerAdder;
+import visualizer.domain.SelectState;
 import visualizer.domain.Selectable;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class GraphCanvas extends JPanel {
     }
 
     private List<String> update(List<Component> updatedComponents) {
-
+        deselectAll();
         if (updatedComponents.isEmpty()) return Collections.emptyList();
         List<String> existingComponents = new ArrayList<>();
 
@@ -49,7 +50,8 @@ public class GraphCanvas extends JPanel {
             existingComponents.add(name);
             var oldComponent = getNamedComponent(name);
             if (oldComponent != null) {
-                ((Selectable) oldComponent).select(((Selectable) component).isSelected());
+                var oldSelectable = (Selectable) oldComponent;
+                (oldSelectable).select(((Selectable) component).getSelected());
                 if (component instanceof EdgeLabel) {
                     var text = ((EdgeLabel) component).getText();
                     ((EdgeLabel) oldComponent).setText(text);
@@ -64,8 +66,12 @@ public class GraphCanvas extends JPanel {
         return existingComponents;
     }
 
+    private void deselectAll() {
+        Arrays.stream(getComponents()).filter(c -> c instanceof Selectable).forEach(c -> ((Selectable) c).select(SelectState.DEFAULT));
+    }
+
     private void select(Selectable source, Selectable target) {
-        target.select(source.isSelected());
+        target.select(source.getSelected());
     }
 
     private void removeExcessiveComponents(List<String> existingComponentNames) {

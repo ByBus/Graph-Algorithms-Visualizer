@@ -2,6 +2,7 @@ package visualizer.presenter;
 
 import visualizer.MainFrame;
 import visualizer.data.VertexDataModel;
+import visualizer.domain.SelectState;
 import visualizer.domain.Selectable;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.util.Objects;
 public class VertexUI extends DraggablePanel implements Selectable, RefreshableComponent {
     private final int diameter = MainFrame.VERTEX_RADIUS * 2;
     private final String index;
-    private boolean highLight = false;
+    private SelectState selectState = SelectState.DEFAULT;
     private JLabel label;
 
     public VertexUI(int x, int y, String index) {
@@ -33,7 +34,7 @@ public class VertexUI extends DraggablePanel implements Selectable, RefreshableC
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         label.setFont(font);
-        label.setForeground(Style.TEXT_COLOR);
+        label.setForeground(Style.TEXT_COLOR_DEFAULT);
         add(label);
     }
 
@@ -54,18 +55,27 @@ public class VertexUI extends DraggablePanel implements Selectable, RefreshableC
         return index;
     }
 
-    public void setSelected(boolean value) {
-        this.highLight = value;
+    public void setSelected(SelectState state) {
+        selectState = state;
     }
 
     @Override //Paints before ui-elements
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor((highLight) ? Style.SELECTION_COLOR : Style.VERTEX_COLOR);
+        if (selectState == SelectState.SELECTED) {
+            g.setColor(Style.SELECTION_COLOR);
+            label.setForeground(Style.TEXT_COLOR_DEFAULT);
+        } else if (selectState == SelectState.HIGHLIGHTED) {
+            g.setColor(Style.START_VERTEX_COLOR);
+            label.setForeground(Style.TEXT_COLOR_HIGHLIGHTED);
+        } else {
+            label.setForeground(Style.TEXT_COLOR_DEFAULT);
+            g.setColor(Style.VERTEX_COLOR);
+        }
         g.fillOval(1, 1, diameter - 3, diameter - 3);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Style.LINE_COLOR);
+        g2.setColor(selectState == SelectState.HIGHLIGHTED ? Style.VERTEX_LINE_HIGHLIGHTED : Style.LINE_COLOR);
         g2.setStroke(new BasicStroke(3));
         g2.drawOval(1, 1, diameter - 3, diameter - 3);
     }
@@ -89,13 +99,13 @@ public class VertexUI extends DraggablePanel implements Selectable, RefreshableC
     }
 
     @Override
-    public void select(boolean value) {
-        highLight = value;
+    public void select(SelectState state) {
+        selectState = state;
     }
 
     @Override
-    public boolean isSelected() {
-        return highLight;
+    public SelectState getSelected() {
+        return selectState;
     }
 
     public VertexDataModel toDataModel() {

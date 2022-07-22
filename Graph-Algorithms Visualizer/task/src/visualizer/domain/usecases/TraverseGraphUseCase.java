@@ -2,11 +2,11 @@ package visualizer.domain.usecases;
 
 import visualizer.data.GraphHistory;
 import visualizer.domain.Command;
-import visualizer.domain.Path;
 import visualizer.domain.algorithm.AlgorithmWorker;
 import visualizer.domain.algorithm.AlgorithmWorkerFactory;
 import visualizer.presenter.GraphCanvas;
 import visualizer.presenter.LabelMaster;
+import visualizer.presenter.Path;
 import visualizer.presenter.VertexUI;
 
 import java.awt.*;

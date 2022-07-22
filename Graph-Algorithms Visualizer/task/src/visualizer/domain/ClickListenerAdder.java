@@ -1,8 +1,9 @@
 package visualizer.domain;
 
-import visualizer.presenter.CollisionManager;
+import visualizer.presenter.drag.CollisionManager;
 import visualizer.presenter.MouseClickListener;
 import visualizer.presenter.MouseDragListener;
+import visualizer.presenter.drag.Draggable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -32,9 +33,8 @@ public class ClickListenerAdder {
         });
 
         if (component instanceof Draggable) {
-            component.addMouseMotionListener((MouseDragListener) e -> {
-                collisionManager.checkCollisions((Draggable) component, e);
-            });
+            component.addMouseMotionListener((MouseDragListener) e ->
+                    collisionManager.checkCollisions((Draggable) component, e));
         }
     }
 }

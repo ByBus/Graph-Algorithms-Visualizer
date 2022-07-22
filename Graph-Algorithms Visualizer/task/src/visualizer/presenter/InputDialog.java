@@ -1,18 +1,21 @@
 package visualizer.presenter;
 
+import visualizer.domain.usecases.Dialog;
+
 import javax.swing.*;
 
-public class Dialog {
+public class InputDialog implements Dialog {
     private final String message;
     private final String title;
     private final Checker checker;
     private Callback callback;
 
-    public Dialog(String message, String title, Checker checker) {
+    public InputDialog(String message, String title, Checker checker) {
         this.message = message;
         this.title = title;
         this.checker = checker;
     }
+    @Override
     public void show() {
         String result = JOptionPane.showInputDialog(null,
                 message,
@@ -31,13 +34,8 @@ public class Dialog {
         }
     }
 
+    @Override
     public void addCallBack(Callback callback) {
         this.callback = callback;
-    }
-
-    public interface Callback {
-        void onSuccess(String index);
-        void onFailed();
-        void onCancel();
     }
 }

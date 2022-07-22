@@ -1,4 +1,4 @@
-package visualizer.domain;
+package visualizer.presenter.drag;
 
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -10,10 +10,6 @@ public interface Draggable extends ComponentListener {
     Point getClickCoordinates();
 
     Container container();
-
-    int width();
-
-    int height();
 
     Rectangle boundingBox();
 

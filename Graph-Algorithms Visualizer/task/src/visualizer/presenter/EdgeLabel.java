@@ -1,6 +1,7 @@
 package visualizer.presenter;
 
 import visualizer.data.AxisHolder;
+import visualizer.domain.SelectState;
 import visualizer.domain.Selectable;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ public class EdgeLabel extends JLabel implements RefreshableComponent, Selectabl
     public final VertexUI start;
     public final VertexUI end;
     private final Font font = new Font("Courier", Font.BOLD, 14);
-    private boolean isHighlighted = false;
+    private SelectState selectState = SelectState.DEFAULT;
 
     public EdgeLabel(String text, VertexUI start, VertexUI end) {
         super(text);
@@ -52,13 +53,13 @@ public class EdgeLabel extends JLabel implements RefreshableComponent, Selectabl
     }
 
     @Override
-    public void select(boolean value) {
-        this.isHighlighted = value;
+    public void select(SelectState state) {
+        selectState = state;
     }
 
     @Override
-    public boolean isSelected() {
-        return isHighlighted;
+    public SelectState getSelected() {
+        return selectState;
     }
 }
 

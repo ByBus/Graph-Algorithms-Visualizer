@@ -25,9 +25,11 @@ public class TestGraphData {
 
     public void setup() {
         before();
-        circleGraph(16, 3, 6, 90,'A');
+        //circleGraph(16, 3, 6, 90,'A');
         //defaultGraph();
         //mazeGraph();
+        //rhombusGraph();
+        //candy();
         after();
     }
 
@@ -77,8 +79,6 @@ public class TestGraphData {
         int centerX = 800 / 2 - 35;
         int centerY = 600 / 2 - 70;
         int radius = 600 / 2 - 75;
-//        int length = (int) (radius * 2 * Math.PI);
-//        int count = length / (100 + 26);
 
         for (int i = 0; i < count; i++) {
             double angle = initialAngle + (360.0 / count) * i;
@@ -96,5 +96,56 @@ public class TestGraphData {
                 graph.addEdge(start, end, random.nextInt(9) + 1);
             }
         }
+    }
+
+    private void rhombusGraph() {
+        var a = new VertexDataModel(170, 400, "A");
+        var b = new VertexDataModel(250, 50, "B");
+        var c = new VertexDataModel(600, 100, "C");
+        var d = new VertexDataModel(575, 300, "D");
+        var verts = List.of(a, b, c, d);
+
+        verts.forEach(graph::addVertex);
+        graph.addEdge(a, b, 1);
+        graph.addEdge(a, d, 2);
+        graph.addEdge(b, c, 4);
+        graph.addEdge(c, d, 2);
+    }
+
+    private void candyGraph() {
+        int xCenter = 360;
+        int yCenter = 220;
+        int delta = 140;
+        int x1 = xCenter - delta * 2;
+        int x2 = xCenter - delta;
+        int x3 = xCenter;
+        int x4 = xCenter + delta;
+        int x5 = xCenter + delta * 2;
+        int y1 = yCenter - delta;
+        int y2 = yCenter;
+        int y3 = yCenter + delta;
+
+        var a = new VertexDataModel(x1, y2, "A");
+        var b = new VertexDataModel(x2, y1, "B");
+        var c = new VertexDataModel(x2, y3, "C");
+        var d = new VertexDataModel(x3, y2, "D");
+        var e = new VertexDataModel(x4, y1, "E");
+        var f = new VertexDataModel(x4, y3, "F");
+        var g = new VertexDataModel(x5, y2, "G");
+        var verts = List.of(a, b, c, d, e, f, g);
+
+        verts.forEach(graph::addVertex);
+        graph.addEdge(a, b, 4);
+        graph.addEdge(a, c, 7);
+        graph.addEdge(b, c, 1);
+        graph.addEdge(b, d, 3);
+        graph.addEdge(d, c, 8);
+        graph.addEdge(c, f, 5);
+        graph.addEdge(b, e, 10);
+        graph.addEdge(d, e, 5);
+        graph.addEdge(d, f, 1);
+        graph.addEdge(e, f, 3);
+        graph.addEdge(e, g, 4);
+        graph.addEdge(f, g, 9);
     }
 }

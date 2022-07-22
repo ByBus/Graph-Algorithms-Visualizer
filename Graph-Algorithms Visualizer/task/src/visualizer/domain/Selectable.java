@@ -1,6 +1,6 @@
 package visualizer.domain;
 
 public interface Selectable {
-    void select(boolean value);
-    boolean isSelected();
+    void select(SelectState selectState);
+    SelectState getSelected();
 }

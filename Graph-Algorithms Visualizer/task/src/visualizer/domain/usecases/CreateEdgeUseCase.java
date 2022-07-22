@@ -1,9 +1,9 @@
 package visualizer.domain.usecases;
 
-import visualizer.domain.Command;
 import visualizer.data.Graph;
+import visualizer.domain.Command;
+import visualizer.domain.SelectState;
 import visualizer.presenter.VertexUI;
-import visualizer.presenter.Dialog;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,13 +12,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class CreateEdgeUseCase implements Command {
-    private final Dialog inputWeightDialog;
+    private final Dialog inputWeightInputDialog;
     private final Graph graph;
     private final Set<VertexUI> buffer = new LinkedHashSet<>();
 
-    public CreateEdgeUseCase(Dialog inputWeightDialog, Graph graph) {
-        this.inputWeightDialog = inputWeightDialog;
+    public CreateEdgeUseCase(Dialog inputWeightInputDialog, Graph graph) {
+        this.inputWeightInputDialog = inputWeightInputDialog;
         this.graph = graph;
     }
 
@@ -27,9 +28,9 @@ public class CreateEdgeUseCase implements Command {
         if (!(component instanceof VertexUI)) return;
         VertexUI vertex = (VertexUI) component;
         boolean isAdded = buffer.add(vertex);
-        select(vertex, isAdded);
+        select(vertex, isAdded ? SelectState.SELECTED : SelectState.DEFAULT);
         if (buffer.size() == 2) {
-            inputWeightDialog.addCallBack(new Dialog.Callback() {
+            inputWeightInputDialog.addCallBack(new Dialog.Callback() {
                 @Override
                 public void onSuccess(String weight) {
                     List<VertexUI> edge = new ArrayList<>(buffer);
@@ -39,7 +40,7 @@ public class CreateEdgeUseCase implements Command {
 
                 @Override
                 public void onFailed() {
-                    inputWeightDialog.show();
+                    inputWeightInputDialog.show();
                 }
 
                 @Override
@@ -47,13 +48,13 @@ public class CreateEdgeUseCase implements Command {
                     reset();
                 }
             });
-            inputWeightDialog.show();
+            inputWeightInputDialog.show();
         }
     }
 
-    private void select(VertexUI vertex, boolean state) {
+    private void select(VertexUI vertex, SelectState state) {
         vertex.select(state);
-        if (!state) reset();
+        if (state != SelectState.SELECTED) reset();
         refresh(vertex);
     }
 
@@ -65,7 +66,7 @@ public class CreateEdgeUseCase implements Command {
     @Override
     public void reset() {
         buffer.forEach(v -> {
-            v.select(false);
+            v.select(SelectState.DEFAULT);
             refresh(v);
         });
         buffer.clear();

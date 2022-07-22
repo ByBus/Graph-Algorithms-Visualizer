@@ -4,18 +4,17 @@ import visualizer.MainFrame;
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
 import visualizer.domain.Command;
-import visualizer.presenter.Dialog;
 import visualizer.presenter.GraphCanvas;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class AddVertexUseCase implements Command {
-    private final Dialog inputIndexDialog;
+    private final Dialog inputIndexInputDialog;
     private final Graph graph;
 
-    public AddVertexUseCase(Dialog inputIndexDialog, Graph graph) {
-        this.inputIndexDialog = inputIndexDialog;
+    public AddVertexUseCase(Dialog inputIndexInputDialog, Graph graph) {
+        this.inputIndexInputDialog = inputIndexInputDialog;
         this.graph = graph;
     }
 
@@ -24,7 +23,7 @@ public class AddVertexUseCase implements Command {
         if (!(component instanceof GraphCanvas)) return;
         int x = event.getX() - MainFrame.VERTEX_RADIUS;
         int y = event.getY() - MainFrame.VERTEX_RADIUS;
-        inputIndexDialog.addCallBack(new Dialog.Callback() {
+        inputIndexInputDialog.addCallBack(new Dialog.Callback() {
             @Override
             public void onSuccess(String index) {
                 graph.addVertex(new VertexDataModel(x, y, index));
@@ -32,13 +31,13 @@ public class AddVertexUseCase implements Command {
 
             @Override
             public void onFailed() {
-                inputIndexDialog.show();
+                inputIndexInputDialog.show();
             }
 
             @Override
             public void onCancel() { }
         });
-        inputIndexDialog.show();
+        inputIndexInputDialog.show();
     }
 
     @Override

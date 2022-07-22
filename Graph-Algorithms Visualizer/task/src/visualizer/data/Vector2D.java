@@ -40,6 +40,18 @@ public class Vector2D implements Comparable<Vector2D>{
         return new Vector2D(kX * x - kY * y, kY * x + kX * y);
     }
 
+    public double scalar(Vector2D other) {
+        return x * other.x + y * other.y;
+    }
+
+    public double angleBetweenRad(Vector2D other) {
+        return Math.cos(scalar(other) / (modulus * other.modulus));
+    }
+
+    public Vector2D multiplyByNumber(double number) {
+        return new Vector2D(x * number, y * number);
+    }
+
     public Point toPoint() {
         return new Point((int) Math.round(x), (int) Math.round(y));
     }

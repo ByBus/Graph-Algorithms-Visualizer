@@ -12,10 +12,12 @@ import visualizer.domain.Mode;
 import visualizer.domain.algorithm.AlgorithmWorkerFactory;
 import visualizer.domain.algorithm.BreadthFirst;
 import visualizer.domain.algorithm.DepthFirst;
+import visualizer.domain.algorithm.Dijkstra;
 import visualizer.domain.usecases.*;
-import visualizer.presenter.Dialog;
+import visualizer.domain.usecases.Dialog;
 import visualizer.presenter.MenuBar;
 import visualizer.presenter.*;
+import visualizer.presenter.drag.CollisionManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -57,11 +59,11 @@ public class MainFrame extends JFrame implements Observer {
         add(currentMode, BorderLayout.NORTH);
         setVisible(true); // update size of inner workspace
 
-        Dialog inputIndexDialog = new Dialog(
+        Dialog inputIndexInputDialog = new InputDialog(
                 "Enter the Vertex ID (Should be 1 char):",
                 "Vertex",
                 new MultiChecker(new IndexChecker(), new UniqueVertexChecker(graph)));
-        Dialog inputWeightDialog = new Dialog(
+        Dialog inputWeightInputDialog = new InputDialog(
             "Enter Weight",
                 "Input",
                 new WeightChecker()
@@ -70,8 +72,8 @@ public class MainFrame extends JFrame implements Observer {
         add(canvas);
 
 
-        Command addVertexUseCase = new AddVertexUseCase(inputIndexDialog, graph);
-        Command createEdgeUseCase = new CreateEdgeUseCase(inputWeightDialog, graph);
+        Command addVertexUseCase = new AddVertexUseCase(inputIndexInputDialog, graph);
+        Command createEdgeUseCase = new CreateEdgeUseCase(inputWeightInputDialog, graph);
         Command noneCommand = new NoneUseCase();
         Command removeVertexUseCase = new RemoveVertexUseCase(canvas, graph);
         Command removeEdgeUseCase = new RemoveEdgeUseCase(canvas, graph);
@@ -80,6 +82,10 @@ public class MainFrame extends JFrame implements Observer {
                 canvas,
                 graphHistory);
         Command depthFirstTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new DepthFirst(graph)),
+                progressLabelMaster,
+                canvas,
+                graphHistory);
+        Command dijkstraTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new Dijkstra(graph)),
                 progressLabelMaster,
                 canvas,
                 graphHistory);
@@ -132,6 +138,13 @@ public class MainFrame extends JFrame implements Observer {
             currentMode.setText(Mode.NONE.label);
             commandController.setCommand(depthFirstTraverseUseCase);
             progressLabelMaster.setPrefix("DFS");
+            progressLabelMaster.initMessage();
+        });
+
+        menu.setDijkstraSearchMenuItemAction(e -> {
+            currentMode.setText(Mode.NONE.label);
+            commandController.setCommand(dijkstraTraverseUseCase);
+            progressLabelMaster.setPrefix("");
             progressLabelMaster.initMessage();
         });
 

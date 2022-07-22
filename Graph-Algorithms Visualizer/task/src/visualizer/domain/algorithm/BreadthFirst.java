@@ -36,9 +36,11 @@ public class BreadthFirst extends TraversalAlgorithm implements Algorithm {
         }
     }
 
+
     @Override
     public void reset() {
         super.reset();
         queue.clear();
     }
+
 }
