@@ -1,6 +1,7 @@
-package visualizer.domain;
+package visualizer.domain.algorithm;
 
 import visualizer.data.VertexDataModel;
+import visualizer.domain.SelectState;
 
 import java.awt.*;
 import java.util.List;
@@ -38,5 +39,11 @@ public class ShortestPath extends SpanningTree {
         vertexUI.select(SelectState.HIGHLIGHTED);
         components.add(vertexUI);
         return components;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        startVertex = null;
     }
 }

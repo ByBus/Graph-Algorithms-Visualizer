@@ -24,13 +24,13 @@ public class TestGraphData {
     }
 
     public void setup() {
-        before();
+        //before();
         //circleGraph(16, 3, 6, 90,'A');
         //defaultGraph();
         //mazeGraph();
         //rhombusGraph();
-        //candy();
-        after();
+        //candyGraph();
+        //after();
     }
 
     private void defaultGraph() {

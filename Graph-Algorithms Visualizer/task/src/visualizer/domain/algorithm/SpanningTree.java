@@ -1,6 +1,7 @@
-package visualizer.domain;
+package visualizer.domain.algorithm;
 
 import visualizer.data.VertexDataModel;
+import visualizer.domain.SelectState;
 import visualizer.presenter.Edge;
 import visualizer.presenter.Path;
 
@@ -51,5 +52,10 @@ public class SpanningTree implements Path {
             });
         });
         return componentList;
+    }
+
+    @Override
+    public void clear() {
+        spanningTree.clear();
     }
 }

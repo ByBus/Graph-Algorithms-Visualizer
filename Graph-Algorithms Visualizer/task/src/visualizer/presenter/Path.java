@@ -16,4 +16,6 @@ public interface Path {
     String toString();
 
     List<Component> toComponents();
+
+    void clear();
 }

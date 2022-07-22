@@ -2,6 +2,7 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
+import visualizer.presenter.Path;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -11,8 +12,8 @@ import java.util.Queue;
 public class BreadthFirst extends TraversalAlgorithm implements Algorithm {
     private final Queue<VertexDataModel> queue = new ArrayDeque<>();
 
-    public BreadthFirst(Graph graph) {
-        super(graph);
+    public BreadthFirst(Graph graph, Path path) {
+        super(graph, path);
     }
 
     @Override
@@ -30,17 +31,16 @@ public class BreadthFirst extends TraversalAlgorithm implements Algorithm {
                 queue.add(vertex);
                 try {
                     action.run();
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
                 path.addEdge(current, vertex, distance.get(vertex));
             });
         }
     }
-
 
     @Override
     public void reset() {
         super.reset();
         queue.clear();
     }
-
 }

@@ -5,14 +5,8 @@ import visualizer.data.checker.IndexChecker;
 import visualizer.data.checker.MultiChecker;
 import visualizer.data.checker.UniqueVertexChecker;
 import visualizer.data.checker.WeightChecker;
-import visualizer.domain.ClickListenerAdder;
-import visualizer.domain.Command;
-import visualizer.domain.Controller;
-import visualizer.domain.Mode;
-import visualizer.domain.algorithm.AlgorithmWorkerFactory;
-import visualizer.domain.algorithm.BreadthFirst;
-import visualizer.domain.algorithm.DepthFirst;
-import visualizer.domain.algorithm.Dijkstra;
+import visualizer.domain.*;
+import visualizer.domain.algorithm.*;
 import visualizer.domain.usecases.*;
 import visualizer.domain.usecases.Dialog;
 import visualizer.presenter.MenuBar;
@@ -77,15 +71,18 @@ public class MainFrame extends JFrame implements Observer {
         Command noneCommand = new NoneUseCase();
         Command removeVertexUseCase = new RemoveVertexUseCase(canvas, graph);
         Command removeEdgeUseCase = new RemoveEdgeUseCase(canvas, graph);
-        Command breadthFirstTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new BreadthFirst(graph)),
+        Command breadthFirstTraverseUseCase = new TraverseGraphUseCase(
+                new AlgorithmWorkerFactory(new BreadthFirst(graph, new SpanningTree())),
                 progressLabelMaster,
                 canvas,
                 graphHistory);
-        Command depthFirstTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new DepthFirst(graph)),
+        Command depthFirstTraverseUseCase = new TraverseGraphUseCase(
+                new AlgorithmWorkerFactory(new DepthFirst(graph, new SpanningTree())),
                 progressLabelMaster,
                 canvas,
                 graphHistory);
-        Command dijkstraTraverseUseCase = new TraverseGraphUseCase(new AlgorithmWorkerFactory(new Dijkstra(graph)),
+        Command dijkstraTraverseUseCase = new TraverseGraphUseCase(
+                new AlgorithmWorkerFactory(new Dijkstra(graph, new ShortestPath())),
                 progressLabelMaster,
                 canvas,
                 graphHistory);

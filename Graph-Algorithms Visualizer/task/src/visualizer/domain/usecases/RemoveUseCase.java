@@ -16,17 +16,11 @@ abstract class RemoveUseCase implements Command {
         this.graph = graph;
     }
 
-    private void refresh() {
-        canvas.revalidate();
-        canvas.repaint();
-    }
-
     protected abstract void removeComponent(Component component);
 
     @Override
     public void execute(Component component, MouseEvent event) {
         removeComponent(component);
-        refresh();
     }
 
     @Override

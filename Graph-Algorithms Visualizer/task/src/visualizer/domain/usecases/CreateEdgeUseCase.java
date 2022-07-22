@@ -35,7 +35,7 @@ public class CreateEdgeUseCase implements Command {
                 public void onSuccess(String weight) {
                     List<VertexUI> edge = new ArrayList<>(buffer);
                     graph.addEdge(edge.get(0).toDataModel(), edge.get(1).toDataModel(), Integer.parseInt(weight));
-                    reset();
+                    buffer.clear();
                 }
 
                 @Override

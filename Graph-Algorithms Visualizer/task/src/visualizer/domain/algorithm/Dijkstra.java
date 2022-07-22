@@ -2,19 +2,17 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
-import visualizer.domain.ShortestPath;
 import visualizer.presenter.Path;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dijkstra extends TraversalAlgorithm implements Algorithm {
-    private Path path = new ShortestPath();
     private static final int INFINITY = Integer.MAX_VALUE;
     private final Queue<Distance> priorityQueue = new PriorityQueue<>();
 
-    public Dijkstra(Graph graph) {
-        super(graph);
+    public Dijkstra(Graph graph, Path path) {
+        super(graph, path);
     }
 
     @Override
@@ -46,18 +44,7 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
                 }
             }
             visited.add(current.vertex);
-
         }
-
-//        for (var k : distances.keySet()) {
-//            if (k.equals(start)) continue;
-//            path.addEdge(start, k, distances.get(k));
-//        }
-    }
-
-    @Override
-    public Path getPath() {
-        return path;
     }
 
     private HashMap<VertexDataModel, Distance> prepareDistances() {
@@ -77,8 +64,7 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
 
     @Override
     public void reset() {
-        visited.clear();
-        path = new ShortestPath();
+        super.reset();
         priorityQueue.clear();
     }
 

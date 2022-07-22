@@ -2,11 +2,12 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
+import visualizer.presenter.Path;
 
 public class DepthFirst extends TraversalAlgorithm implements Algorithm {
 
-    public DepthFirst(Graph graph) {
-        super(graph);
+    public DepthFirst(Graph graph, Path path) {
+        super(graph, path);
     }
 
     @Override
@@ -33,6 +34,4 @@ public class DepthFirst extends TraversalAlgorithm implements Algorithm {
     public void reset() {
         super.reset();
     }
-
-
 }

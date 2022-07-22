@@ -2,7 +2,6 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.Graph;
 import visualizer.data.VertexDataModel;
-import visualizer.domain.SpanningTree;
 import visualizer.presenter.Path;
 
 import java.util.HashSet;
@@ -14,11 +13,12 @@ import java.util.stream.Collectors;
 abstract class TraversalAlgorithm implements Algorithm{
     protected final Set<VertexDataModel> visited = new HashSet<>();
     protected final Graph graph;
-    protected Path path = new SpanningTree();
+    protected Path path;
     protected SubStepAction action = () -> { };
 
-    public TraversalAlgorithm(Graph graph) {
+    public TraversalAlgorithm(Graph graph, Path path) {
         this.graph = graph;
+        this.path = path;
     }
 
     protected LinkedHashMap<VertexDataModel, Integer> getAdjacentSortedByWeight(VertexDataModel current) {
@@ -47,6 +47,6 @@ abstract class TraversalAlgorithm implements Algorithm{
     @Override
     public void reset() {
         visited.clear();
-        path = new SpanningTree();
+        path.clear();
     }
 }
