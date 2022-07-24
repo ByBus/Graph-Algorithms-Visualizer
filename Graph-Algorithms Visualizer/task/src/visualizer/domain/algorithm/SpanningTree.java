@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class SpanningTree implements Path {
     protected final Map<VertexDataModel, HashMap<VertexDataModel, Integer>> spanningTree = new LinkedHashMap<>();
+    protected SelectState selectionType = SelectState.SELECTED;
 
     @Override
     public void addVertex(VertexDataModel vertex) {
@@ -44,11 +45,11 @@ public class SpanningTree implements Path {
         List<Component> componentList = new ArrayList<>();
         spanningTree.forEach((vert, connections) -> {
             var vertexUI = vert.toVertexUI();
-            vertexUI.setSelected(SelectState.SELECTED);
+            vertexUI.setSelected(selectionType);
             componentList.add(vertexUI);
             connections.forEach((connectedVert, weight) -> {
-                componentList.add(new Edge(vertexUI, connectedVert.toVertexUI(), true));
-                componentList.add(new Edge(connectedVert.toVertexUI(), vertexUI, true));
+                componentList.add(new Edge(vertexUI, connectedVert.toVertexUI(), selectionType));
+                componentList.add(new Edge(connectedVert.toVertexUI(), vertexUI, selectionType));
             });
         });
         return componentList;

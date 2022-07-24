@@ -63,6 +63,8 @@ public class TraverseGraphUseCase implements Command {
         @Override
         public void onDone(Path path) {
             labelMaster.showPath(path);
+            isStarted = false;
+            init();
         }
     };
 }

@@ -17,7 +17,7 @@ public class DepthFirst extends TraversalAlgorithm implements Algorithm {
 
     private void traverseHelper(VertexDataModel current, int currentWeight) throws InterruptedException {
         visited.add(current);
-        executeAction();
+        executeStepAction();
         var adjacent = getAdjacentSortedByWeight(current);
         for (VertexDataModel vertex : adjacent.keySet()) {
             if (!visited.contains(vertex)) {

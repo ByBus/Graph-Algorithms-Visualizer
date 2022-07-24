@@ -8,13 +8,14 @@ public interface Algorithm {
 
     Path getPath();
 
-    void setAction(SubStepAction action);
+    void setAction(Action action);
 
-    void executeAction();
+    void executeStepAction();
 
     void reset();
 
-    interface SubStepAction {
-        void run() throws InterruptedException;
+    interface Action {
+        void onEveryStep() throws InterruptedException;
+        void onEnd(Path path);
     }
 }

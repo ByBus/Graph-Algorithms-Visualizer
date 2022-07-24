@@ -2,10 +2,11 @@ package visualizer.domain.algorithm;
 
 import visualizer.data.VertexDataModel;
 import visualizer.domain.SelectState;
+import visualizer.presenter.Path;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class ShortestPath extends SpanningTree {
     private VertexDataModel startVertex = null;
@@ -30,6 +31,19 @@ public class ShortestPath extends SpanningTree {
             joiner.add(vert + "=" + minDistance);
         }
         return joiner.toString();
+    }
+
+    public Path findShortestPath(VertexDataModel end) {
+        ShortestPathHighlighted pathHighlighted = new ShortestPathHighlighted();
+        VertexDataModel current = end;
+        do {
+            Map.Entry<VertexDataModel, Integer> min = Collections.min(spanningTree.get(current).entrySet(),
+                    Map.Entry.comparingByValue());
+            pathHighlighted.addEdge(current, min.getKey(), min.getValue());
+            current = min.getKey();
+        } while (current != startVertex);
+        pathHighlighted.setDistance(Collections.min(spanningTree.get(end).values()));
+        return pathHighlighted;
     }
 
     @Override

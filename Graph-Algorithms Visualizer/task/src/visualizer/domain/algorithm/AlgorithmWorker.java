@@ -22,9 +22,17 @@ public class AlgorithmWorker extends SwingWorker<Integer, Path> {
 
     @Override
     protected Integer doInBackground() throws InterruptedException {
-        algorithm.setAction(() -> {
-            Thread.sleep(400);
-            publish(algorithm.getPath());
+        algorithm.setAction(new Algorithm.Action() {
+            @Override
+            public void onEveryStep() throws InterruptedException {
+                Thread.sleep(400);
+                publish(algorithm.getPath());
+            }
+
+            @Override
+            public void onEnd(Path path) {
+                callback.onResult(path);
+            }
         });
         algorithm.traverse(start);
         return null;

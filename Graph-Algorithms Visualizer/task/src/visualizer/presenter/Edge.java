@@ -23,9 +23,9 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
         init();
     }
 
-    public Edge(VertexUI start, VertexUI end, boolean isSelected) {
+    public Edge(VertexUI start, VertexUI end, SelectState state) {
         this(start, end, 0);
-        selectState = isSelected ? SelectState.SELECTED : SelectState.DEFAULT;
+        this.selectState = state;
     }
 
     private void init() {
@@ -65,7 +65,8 @@ public class Edge extends JComponent implements Selectable, RefreshableComponent
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(LINE_WIDTH));
-        g2.setColor((selectState == SelectState.SELECTED) ? Style.SELECTION_COLOR : Style.LINE_COLOR);
+        g2.setColor((selectState == SelectState.SELECTED) ? Style.SELECTION_COLOR :
+                (selectState == SelectState.DEFAULT) ? Style.LINE_COLOR : Style.LINE_COLOR_HIGHLIGHTED);
         g2.draw(createLine());
     }
 

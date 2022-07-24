@@ -26,7 +26,7 @@ public class Prims extends TraversalAlgorithm implements Algorithm{
                     priorityQueue.addAll(getPrimEdges(vert));
                 }
             }
-            executeAction();
+            executeStepAction();
             path.addEdge(edge.end, edge.start, edge.distance);
             visited.addAll(edge.vertices());
         }

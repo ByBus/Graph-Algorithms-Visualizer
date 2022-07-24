@@ -29,7 +29,7 @@ public class BreadthFirst extends TraversalAlgorithm implements Algorithm {
             adjacent.forEach((vertex, weight) -> {
                 distance.putIfAbsent(vertex, distance.get(current) + 1);
                 queue.add(vertex);
-                executeAction();
+                executeStepAction();
                 path.addEdge(current, vertex, distance.get(vertex));
             });
         }

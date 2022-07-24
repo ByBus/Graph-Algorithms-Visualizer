@@ -66,7 +66,7 @@ public class VertexUI extends DraggablePanel implements Selectable, RefreshableC
             g.setColor(Style.SELECTION_COLOR);
             label.setForeground(Style.TEXT_COLOR_DEFAULT);
         } else if (selectState == SelectState.HIGHLIGHTED) {
-            g.setColor(Style.START_VERTEX_COLOR);
+            g.setColor(Style.VERTEX_COLOR_HIGHLIGHTED);
             label.setForeground(Style.TEXT_COLOR_HIGHLIGHTED);
         } else {
             label.setForeground(Style.TEXT_COLOR_DEFAULT);
