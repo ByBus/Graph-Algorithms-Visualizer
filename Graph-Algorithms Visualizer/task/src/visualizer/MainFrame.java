@@ -16,6 +16,9 @@ import visualizer.presenter.drag.CollisionManager;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MainFrame extends JFrame implements Observer {
     public static final int WINDOW_WIDTH = 800;
@@ -28,6 +31,7 @@ public class MainFrame extends JFrame implements Observer {
     private final GraphCanvasAdapter adapter = new GraphCanvasAdapter(canvas);
     private final Graph graph = new Graph();
     private final GraphHistory<SavableGraph.GraphState> graphHistory = new GraphHistory<>(graph);
+    private final TestGraphData presets = new TestGraphData(graph, this);
 
     public MainFrame() {
         super("Graph-Algorithms Visualizer");
@@ -41,6 +45,7 @@ public class MainFrame extends JFrame implements Observer {
         graph.addObserver(this);
 
         MenuBar menu = new MenuBar();
+        createPresetsMenu(menu);
         setJMenuBar(menu);
 
         JLabel progressLabel = new JLabel("333", SwingConstants.CENTER);
@@ -49,7 +54,7 @@ public class MainFrame extends JFrame implements Observer {
 
         JLabel currentMode = new JLabel(Mode.ADD_VERTEX.label, SwingConstants.RIGHT);
         currentMode.setName("Mode");
-        currentMode.setBorder(new EmptyBorder(0,10,0,10));
+        currentMode.setBorder(new EmptyBorder(0, 10, 0, 10));
         add(currentMode, BorderLayout.NORTH);
         setVisible(true); // update size of inner workspace
 
@@ -58,7 +63,7 @@ public class MainFrame extends JFrame implements Observer {
                 "Vertex",
                 new MultiChecker(new IndexChecker(), new UniqueVertexChecker(graph)));
         Dialog inputWeightInputDialog = new InputDialog(
-            "Enter Weight",
+                "Enter Weight",
                 "Input",
                 new WeightChecker()
         );
@@ -86,12 +91,16 @@ public class MainFrame extends JFrame implements Observer {
                 progressLabelMaster,
                 canvas,
                 graphHistory);
+        Command primTraverseUseCase = new TraverseGraphUseCase(
+                new AlgorithmWorkerFactory(new Prims(graph, new MinimumSpanningTree())),
+                progressLabelMaster,
+                canvas,
+                graphHistory);
 
         commandController.setCommand(addVertexUseCase);
 
         menu.setAddVertexItemAction(e -> {
-            currentMode.setText(Mode.ADD_VERTEX.label);
-            commandController.setCommand(addVertexUseCase);
+            addVertexMode(currentMode, addVertexUseCase);
         });
 
         menu.setCreateEdgeItemAction(e -> {
@@ -117,6 +126,7 @@ public class MainFrame extends JFrame implements Observer {
         menu.setNewItemAction(e -> {
             graphHistory.clear();
             graph.clear();
+            addVertexMode(currentMode, addVertexUseCase);
         });
 
         menu.setExitItemAction(e -> {
@@ -145,10 +155,29 @@ public class MainFrame extends JFrame implements Observer {
             progressLabelMaster.initMessage();
         });
 
-        setVisible(true);
+        menu.setPrimMinimumSpanningTreeMenuItemAction(e -> {
+            currentMode.setText(Mode.NONE.label);
+            commandController.setCommand(primTraverseUseCase);
+            progressLabelMaster.setPrefix("");
+            progressLabelMaster.initMessage();
+        });
 
-        var test = new TestGraphData(graph, this);
-        test.setup();
+        setVisible(true);
+    }
+
+    private void addVertexMode(JLabel currentMode, Command addVertexUseCase) {
+        currentMode.setText(Mode.ADD_VERTEX.label);
+        commandController.setCommand(addVertexUseCase);
+    }
+
+    private void createPresetsMenu(MenuBar menu) {
+        Map<String, ActionListener> presetsMenuItems = presets.graphsNames().stream()
+                .collect(Collectors.toMap(
+                        name -> name,
+                        name -> e -> presets.draw(name),
+                        (a, b) -> b)
+                );
+        menu.createMenu("Presets", presetsMenuItems);
     }
 
     @Override

@@ -2,6 +2,7 @@ package visualizer.presenter;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class MenuBar extends JMenuBar {
     private final JMenuItem newItem = new MenuItem("New");
@@ -16,6 +17,7 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem depthFirstSearchMenuItem = new MenuItem("Depth-First Search");
     private final JMenuItem breadthFirstSearchMenuItem = new MenuItem("Breadth-First Search");
     private final JMenuItem dijkstraSearchMenuItem = new MenuItem("Dijkstra's Algorithm");
+    private final JMenuItem primMinimumSpanningTreeMenuItem = new MenuItem("Prim's Algorithm");
 
     public MenuBar() {
         setName("MenuBar");
@@ -40,6 +42,7 @@ public class MenuBar extends JMenuBar {
         algorithmMenu.add(depthFirstSearchMenuItem);
         algorithmMenu.add(breadthFirstSearchMenuItem);
         algorithmMenu.add(dijkstraSearchMenuItem);
+        algorithmMenu.add(primMinimumSpanningTreeMenuItem);
         add(algorithmMenu);
     }
 
@@ -81,5 +84,19 @@ public class MenuBar extends JMenuBar {
 
     public void setDijkstraSearchMenuItemAction(ActionListener action) {
         dijkstraSearchMenuItem.addActionListener(action);
+    }
+
+    public void setPrimMinimumSpanningTreeMenuItemAction(ActionListener action) {
+        primMinimumSpanningTreeMenuItem.addActionListener(action);
+    }
+
+    public void createMenu(String menuName, Map<String, ActionListener> items) {
+        JMenu menu = new JMenu(menuName);
+        items.forEach((itemName, action) -> {
+            JMenuItem menuItem = new MenuItem(itemName);
+            menuItem.addActionListener(action);
+            menu.add(menuItem);
+        });
+        add(menu);
     }
 }

@@ -10,6 +10,8 @@ public interface Algorithm {
 
     void setAction(SubStepAction action);
 
+    void executeAction();
+
     void reset();
 
     interface SubStepAction {

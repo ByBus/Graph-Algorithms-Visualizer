@@ -33,10 +33,7 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
                     if (newDistance < distances.get(neighbor.vertex).distance) {
                         var previousConnectedVertex = distances.get(neighbor.vertex).vertex;
                         distances.put(neighbor.vertex, new Distance(current.vertex, newDistance));
-                        try {
-                            action.run();
-                        } catch (InterruptedException ignored) {
-                        }
+                        executeAction();
                         path.addEdge(current.vertex, neighbor.vertex, newDistance);
                         path.removeEdge(neighbor.vertex, previousConnectedVertex);
                     }

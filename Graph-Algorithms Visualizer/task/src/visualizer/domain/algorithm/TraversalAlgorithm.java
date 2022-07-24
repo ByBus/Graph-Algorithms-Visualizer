@@ -45,6 +45,14 @@ abstract class TraversalAlgorithm implements Algorithm{
     }
 
     @Override
+    public void executeAction() {
+        try {
+            action.run();
+        } catch (InterruptedException ignored) {
+        }
+    }
+
+    @Override
     public void reset() {
         visited.clear();
         path.clear();

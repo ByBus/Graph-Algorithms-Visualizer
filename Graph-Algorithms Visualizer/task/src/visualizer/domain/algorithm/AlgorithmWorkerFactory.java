@@ -1,7 +1,7 @@
 package visualizer.domain.algorithm;
 
 public class AlgorithmWorkerFactory {
-    Algorithm algorithm;
+    private final Algorithm algorithm;
 
     public AlgorithmWorkerFactory(Algorithm algorithm) {
         this.algorithm = algorithm;
