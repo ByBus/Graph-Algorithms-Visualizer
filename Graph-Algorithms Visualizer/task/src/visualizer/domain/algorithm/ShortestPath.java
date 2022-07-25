@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ShortestPath extends SpanningTree {
     private VertexDataModel startVertex = null;
+    protected SelectState selectionType = SelectState.HIGHLIGHTED;
 
     @Override
     public void addVertex(VertexDataModel vertex) {
@@ -36,6 +37,7 @@ public class ShortestPath extends SpanningTree {
     public Path findShortestPath(VertexDataModel end) {
         ShortestPathHighlighted pathHighlighted = new ShortestPathHighlighted();
         VertexDataModel current = end;
+        System.out.println(current + " : " + spanningTree.get(current).entrySet());
         do {
             Map.Entry<VertexDataModel, Integer> min = Collections.min(spanningTree.get(current).entrySet(),
                     Map.Entry.comparingByValue());
@@ -50,7 +52,7 @@ public class ShortestPath extends SpanningTree {
     public List<Component> toComponents() {
         var components = super.toComponents();
         var vertexUI = startVertex.toVertexUI();
-        vertexUI.select(SelectState.HIGHLIGHTED);
+        vertexUI.select(selectionType);
         components.add(vertexUI);
         return components;
     }

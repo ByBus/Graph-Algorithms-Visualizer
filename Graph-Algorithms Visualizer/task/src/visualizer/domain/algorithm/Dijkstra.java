@@ -23,27 +23,25 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
             HashMap<VertexDataModel, Distance> distances = prepareDistances();
             path.addVertex(clickedVertex);
 
-            Distance startVertex = new Distance(clickedVertex, 0);
-            distances.put(clickedVertex, startVertex);
-            priorityQueue.offer(startVertex);
+            Distance startDistance = new Distance(clickedVertex, 0);
+            distances.put(clickedVertex, startDistance);
+            priorityQueue.offer(startDistance);
 
             while (priorityQueue.peek() != null) {
                 var current = priorityQueue.poll();
                 var neighbors = getNeighbors(current);
                 for (var neighbor : neighbors) {
-                    if (!visited.contains(neighbor.vertex)) {
-                        int newDistance = distances.get(current.vertex).distance + neighbor.distance;
-                        if (newDistance < distances.get(neighbor.vertex).distance) {
-                            var previousConnectedVertex = distances.get(neighbor.vertex).vertex;
-                            distances.put(neighbor.vertex, new Distance(current.vertex, newDistance));
-                            executeStepAction();
-                            path.addEdge(current.vertex, neighbor.vertex, newDistance);
-                            path.removeEdge(neighbor.vertex, previousConnectedVertex);
-                        }
+                    int newDistance = distances.get(current.vertex).distance + neighbor.distance;
+                    if (newDistance < distances.get(neighbor.vertex).distance) {
+                        var previousConnectedVertex = distances.get(neighbor.vertex).vertex;
+                        distances.put(neighbor.vertex, new Distance(current.vertex, newDistance));
+                        executeStepAction();
+                        path.addEdge(current.vertex, neighbor.vertex, newDistance);
+                        //path.removeEdge(neighbor.vertex, previousConnectedVertex);
                         priorityQueue.offer(neighbor);
                     }
                 }
-                visited.add(current.vertex);
+                //visited.add(current.vertex);
             }
         }
         if (!startVertex.equals(clickedVertex)) {
@@ -77,7 +75,7 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
     }
 
     private List<Distance> getNeighbors(Distance vertexDistance) {
-        return getAdjacentSortedByWeight(vertexDistance.vertex).entrySet().stream()
+        return graph.getAdjacent(vertexDistance.vertex).entrySet().stream()
                 .map(entry -> new Distance(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }

@@ -6,7 +6,7 @@ public class TestGraphData {
     private final Graph graph;
     private final Observer[] observers;
     private final Map<String, Runnable> graphs = Map.of(
-            "Circle", circleGraph(16, 3, 6, 90,'A'),
+            "Circle", circleGraph(10, 3, 3, 90,'A'),
             "Default", defaultGraph(),
             "Maze", mazeGraph(),
             "Rhombus", rhombusGraph(),

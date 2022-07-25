@@ -25,7 +25,7 @@ public class AlgorithmWorker extends SwingWorker<Integer, Path> {
         algorithm.setAction(new Algorithm.Action() {
             @Override
             public void onEveryStep() throws InterruptedException {
-                Thread.sleep(400);
+                Thread.sleep(200);
                 publish(algorithm.getPath());
             }
 

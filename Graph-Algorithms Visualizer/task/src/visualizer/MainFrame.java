@@ -171,10 +171,14 @@ public class MainFrame extends JFrame implements Observer {
     }
 
     private void createPresetsMenu(MenuBar menu) {
+        Command none = new NoneUseCase();
         Map<String, ActionListener> presetsMenuItems = presets.graphsNames().stream()
                 .collect(Collectors.toMap(
                         name -> name,
-                        name -> e -> presets.draw(name),
+                        name -> e -> {
+                            commandController.setCommand(none);
+                            presets.draw(name);
+                        },
                         (a, b) -> b)
                 );
         menu.createMenu("Presets", presetsMenuItems);
