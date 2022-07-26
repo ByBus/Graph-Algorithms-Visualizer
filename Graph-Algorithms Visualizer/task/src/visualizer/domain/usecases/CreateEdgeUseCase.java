@@ -32,9 +32,14 @@ public class CreateEdgeUseCase implements Command {
         if (buffer.size() == 2) {
             inputWeightInputDialog.addCallBack(new Dialog.Callback() {
                 @Override
-                public void onSuccess(String weight) {
+                public void onSuccess(String parameters) {
+                    String[] params = parameters.split(";");
                     List<VertexUI> edge = new ArrayList<>(buffer);
-                    graph.addEdge(edge.get(0).toDataModel(), edge.get(1).toDataModel(), Integer.parseInt(weight));
+                    if (params[1].equals("true")) {
+                        graph.addDirectedEdge(edge.get(0).toDataModel(), edge.get(1).toDataModel(), Integer.parseInt(params[0]));
+                    } else {
+                        graph.addEdge(edge.get(0).toDataModel(), edge.get(1).toDataModel(), Integer.parseInt(params[0]));
+                    }
                     buffer.clear();
                 }
 

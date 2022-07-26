@@ -28,12 +28,6 @@ public class SpanningTree implements Path {
     }
 
     @Override
-    public void removeEdge(VertexDataModel start, VertexDataModel end) {
-        spanningTree.get(start).remove(end);
-        spanningTree.get(end).remove(start);
-    }
-
-    @Override
     public String toString() {
         return spanningTree.keySet().stream()
                 .map(VertexDataModel::getIndex)
@@ -49,7 +43,6 @@ public class SpanningTree implements Path {
             componentList.add(vertexUI);
             connections.forEach((connectedVert, weight) -> {
                 componentList.add(new Edge(vertexUI, connectedVert.toVertexUI(), selectionType));
-                componentList.add(new Edge(connectedVert.toVertexUI(), vertexUI, selectionType));
             });
         });
         return componentList;

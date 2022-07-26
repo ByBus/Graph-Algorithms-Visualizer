@@ -1,12 +1,16 @@
 package visualizer.data;
 
+import visualizer.data.checker.PositiveNumberChecker;
+import visualizer.domain.usecases.Dialog;
+import visualizer.presenter.InputCircleGraphPresetDialog;
+
 import java.util.*;
 
 public class TestGraphData {
     private final Graph graph;
     private final Observer[] observers;
     private final Map<String, Runnable> graphs = Map.of(
-            "Circle", circleGraph(10, 3, 3, 90,'A'),
+            "Circle", circleGraph(),
             "Default", defaultGraph(),
             "Maze", mazeGraph(),
             "Rhombus", rhombusGraph(),
@@ -14,9 +18,13 @@ public class TestGraphData {
             "Prim test", primTest()
     );
 
+    private final InputCircleGraphPresetDialog circleParametersDialog =
+            new InputCircleGraphPresetDialog("Input parameters of the Graph", new PositiveNumberChecker());
+
     public TestGraphData(Graph graph, Observer... observers) {
         this.graph = graph;
         this.observers = observers;
+        addDialogCallback();
     }
 
     private void before() {
@@ -30,9 +38,7 @@ public class TestGraphData {
     }
 
     public void draw(String name) {
-        before();
         graphs.get(name).run();
-        after();
     }
 
     public List<String> graphsNames() {
@@ -41,6 +47,7 @@ public class TestGraphData {
 
     private Runnable defaultGraph() {
         return () -> {
+            before();
             var a = new VertexDataModel(60, 420, "A");
             var b = new VertexDataModel(90, 200, "B");
             var c = new VertexDataModel(300, 400, "C");
@@ -60,11 +67,13 @@ public class TestGraphData {
             graph.addEdge(d, e, 10);
             graph.addEdge(d, f, 3);
             graph.addEdge(e, f, 4);
+            after();
         };
     }
 
     private Runnable mazeGraph() {
         return () -> {
+            before();
             int step = 101;
             List<VertexDataModel> vert = new ArrayList<>();
             var random = new Random();
@@ -79,39 +88,47 @@ public class TestGraphData {
                             .forEach(v -> graph.addEdge(newVert, v, random.nextInt(9) + 1));
                 }
             }
+            after();
         };
     }
 
-    private Runnable circleGraph(int count, int skip, int connect, int initialAngle, char startIndex) {
+    private Runnable circleGraph() {
         return () -> {
-            var random = new Random();
-            List<VertexDataModel> vertices = new ArrayList<>();
-            char name = startIndex;
-            int centerX = 800 / 2 - 35;
-            int centerY = 600 / 2 - 70;
-            int radius = 600 / 2 - 75;
-
-            for (int i = 0; i < count; i++) {
-                double angle = initialAngle + (360.0 / count) * i;
-                double x = (radius * Math.cos(Math.toRadians(angle)));
-                double y = (radius * Math.sin(Math.toRadians(angle)));
-                var vertex = new VertexDataModel((int) (centerX + x), (int) (centerY + y), String.valueOf(name++));
-                graph.addVertex(vertex);
-                vertices.add(vertex);
-            }
-
-            for (int j = 0; j < vertices.size(); j++) {
-                var start = vertices.get(j);
-                for (int k = j + skip + 1; k < j + skip + 1 + connect; k++) {
-                    var end = vertices.get(k % vertices.size());
-                    graph.addEdge(start, end, random.nextInt(9) + 1);
-                }
-            }
+            circleParametersDialog.show();
         };
+    }
+
+    private void circleGraph(int count, int skip, int connect, int initialAngle, char startIndex) {
+        before();
+        var random = new Random();
+        List<VertexDataModel> vertices = new ArrayList<>();
+        char name = startIndex;
+        int centerX = 800 / 2 - 35;
+        int centerY = 600 / 2 - 70;
+        int radius = 600 / 2 - 75;
+
+        for (int i = 0; i < count; i++) {
+            double angle = initialAngle + (360.0 / count) * i;
+            double x = (radius * Math.cos(Math.toRadians(angle)));
+            double y = (radius * Math.sin(Math.toRadians(angle)));
+            var vertex = new VertexDataModel((int) (centerX + x), (int) (centerY + y), String.valueOf(name++));
+            graph.addVertex(vertex);
+            vertices.add(vertex);
+        }
+
+        for (int j = 0; j < vertices.size(); j++) {
+            var start = vertices.get(j);
+            for (int k = j + skip + 1; k < j + skip + 1 + connect; k++) {
+                var end = vertices.get(k % vertices.size());
+                graph.addEdge(start, end, random.nextInt(9) + 1);
+            }
+        }
+        after();
     }
 
     private Runnable rhombusGraph() {
         return () -> {
+            before();
             var a = new VertexDataModel(170, 400, "A");
             var b = new VertexDataModel(250, 50, "B");
             var c = new VertexDataModel(600, 100, "C");
@@ -123,11 +140,13 @@ public class TestGraphData {
             graph.addEdge(a, d, 2);
             graph.addEdge(b, c, 4);
             graph.addEdge(c, d, 2);
+            after();
         };
     }
 
     private Runnable candyGraph() {
         return () -> {
+            before();
             int xCenter = 360;
             int yCenter = 220;
             int delta = 140;
@@ -162,11 +181,13 @@ public class TestGraphData {
             graph.addEdge(e, f, 3);
             graph.addEdge(e, g, 4);
             graph.addEdge(f, g, 9);
+            after();
         };
     }
 
     private Runnable primTest() {
         return () -> {
+            before();
             int x0 = 65;
             int y0 = 130;
             int i = 200;
@@ -194,6 +215,27 @@ public class TestGraphData {
             graph.addEdge(v4, v7, 1);
             graph.addEdge(v4, v6, 5);
             graph.addEdge(v6, v7, 2);
+            after();
         };
+    }
+
+    private void addDialogCallback() {
+        circleParametersDialog.addCallBack(new Dialog.Callback() {
+            @Override
+            public void onSuccess(String index) {
+                int[] params = Arrays.stream(index.split(";")).mapToInt(Integer::parseInt).toArray();
+                circleGraph(params[0], params[1], params[2], params[3], 'A');
+            }
+
+            @Override
+            public void onFailed() {
+                circleParametersDialog.show();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
     }
 }

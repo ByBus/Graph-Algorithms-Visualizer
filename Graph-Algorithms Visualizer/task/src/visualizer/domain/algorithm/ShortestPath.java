@@ -37,11 +37,10 @@ public class ShortestPath extends SpanningTree {
     public Path findShortestPath(VertexDataModel end) {
         ShortestPathHighlighted pathHighlighted = new ShortestPathHighlighted();
         VertexDataModel current = end;
-        System.out.println(current + " : " + spanningTree.get(current).entrySet());
         do {
             Map.Entry<VertexDataModel, Integer> min = Collections.min(spanningTree.get(current).entrySet(),
                     Map.Entry.comparingByValue());
-            pathHighlighted.addEdge(current, min.getKey(), min.getValue());
+            pathHighlighted.addEdge(min.getKey(), current, min.getValue());
             current = min.getKey();
         } while (current != startVertex);
         pathHighlighted.setDistance(Collections.min(spanningTree.get(end).values()));

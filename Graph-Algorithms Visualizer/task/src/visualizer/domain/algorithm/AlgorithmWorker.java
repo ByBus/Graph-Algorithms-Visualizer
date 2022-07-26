@@ -9,11 +9,11 @@ import java.util.List;
 public class AlgorithmWorker extends SwingWorker<Integer, Path> {
     private final Algorithm algorithm;
     private VertexDataModel start = null;
-    private final Callback callback;
+    private final WorkerCallback workerCallback;
 
-    public AlgorithmWorker(Algorithm algorithm, Callback callback) {
+    public AlgorithmWorker(Algorithm algorithm, WorkerCallback workerCallback) {
         this.algorithm = algorithm;
-        this.callback = callback;
+        this.workerCallback = workerCallback;
     }
 
     public void setStart(VertexDataModel vertex) {
@@ -22,7 +22,7 @@ public class AlgorithmWorker extends SwingWorker<Integer, Path> {
 
     @Override
     protected Integer doInBackground() throws InterruptedException {
-        algorithm.setAction(new Algorithm.Action() {
+        algorithm.setCallback(new Algorithm.Callback() {
             @Override
             public void onEveryStep() throws InterruptedException {
                 Thread.sleep(200);
@@ -30,8 +30,8 @@ public class AlgorithmWorker extends SwingWorker<Integer, Path> {
             }
 
             @Override
-            public void onEnd(Path path) {
-                callback.onResult(path);
+            public void onPathReady(Path path) {
+                workerCallback.onResultReady(path);
             }
         });
         algorithm.traverse(start);
@@ -42,20 +42,20 @@ public class AlgorithmWorker extends SwingWorker<Integer, Path> {
     protected void process(List<Path> chunks) {
         super.process(chunks);
         var path = chunks.get(0);
-        callback.onResult(path);
+        workerCallback.onResultReady(path);
     }
 
     @Override
     protected void done() {
-        callback.onDone(algorithm.getPath());
+        workerCallback.onDone(algorithm.getPath());
     }
 
     public void reset() {
         algorithm.reset();
     }
 
-    public interface Callback {
-        void onResult(Path path);
+    public interface WorkerCallback {
+        void onResultReady(Path path);
 
         void onDone(Path path);
     }

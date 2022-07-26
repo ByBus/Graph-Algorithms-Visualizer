@@ -36,9 +36,17 @@ public class Graph extends SavableGraph implements Observable {
         notifyObservers();
     }
 
-    public void updateEdge(VertexDataModel start, VertexDataModel end, int weight) {
-       getAdjacent(start).put(end, weight);
-       getAdjacent(end).put(start, weight);
+    public void addDirectedEdge(VertexDataModel start, VertexDataModel end, int weight) {
+        graph.get(start).put(end.withLabel(), weight);
+        notifyObservers();
+    }
+
+    public boolean isDirected(VertexDataModel start, VertexDataModel end) {
+        try {
+            return !(graph.get(start).containsKey(end) && graph.get(end).containsKey(start));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void removeVertex(VertexDataModel vertex) {

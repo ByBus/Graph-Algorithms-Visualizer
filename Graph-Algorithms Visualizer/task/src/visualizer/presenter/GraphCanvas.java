@@ -30,17 +30,17 @@ public class GraphCanvas extends JPanel {
     }
 
     public void syncComponents(List<Component> updatedComponents) {
-        List<String> existingComponents = update(updatedComponents);
+        List<String> existingComponents = update(updatedComponents, true);
         removeExcessiveComponents(existingComponents);
         refresh();
     }
 
     public void updateComponents(List<Component> updatedComponents) {
-        update(updatedComponents);
+        update(updatedComponents, false);
         refresh();
     }
 
-    private List<String> update(List<Component> updatedComponents) {
+    private List<String> update(List<Component> updatedComponents, boolean isCreateMissing) {
         deselectAll();
         if (updatedComponents.isEmpty()) return Collections.emptyList();
         List<String> existingComponents = new ArrayList<>();
@@ -56,22 +56,18 @@ public class GraphCanvas extends JPanel {
                     var text = ((EdgeLabel) component).getText();
                     ((EdgeLabel) oldComponent).setText(text);
                 }
-            } else {
+            } else if(isCreateMissing){
                 add(component);
-                //if (!(component instanceof EdgeLabel)) {
-                    clickAdder.add(component);
-                //}
+                clickAdder.add(component);
             }
         });
         return existingComponents;
     }
 
     private void deselectAll() {
-        Arrays.stream(getComponents()).filter(c -> c instanceof Selectable).forEach(c -> ((Selectable) c).select(SelectState.DEFAULT));
-    }
-
-    private void select(Selectable source, Selectable target) {
-        target.select(source.getSelected());
+        Arrays.stream(getComponents()).filter(c -> c instanceof Selectable)
+                .forEach(c -> ((Selectable) c)
+                        .select(SelectState.DEFAULT));
     }
 
     private void removeExcessiveComponents(List<String> existingComponentNames) {

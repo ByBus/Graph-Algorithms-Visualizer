@@ -62,8 +62,9 @@ public class MainFrame extends JFrame implements Observer {
                 "Enter the Vertex ID (Should be 1 char):",
                 "Vertex",
                 new MultiChecker(new IndexChecker(), new UniqueVertexChecker(graph)));
-        Dialog inputWeightInputDialog = new InputDialog(
+        Dialog inputWeightInputDialog = new InputCheckBoxDialog(
                 "Enter Weight",
+                "Directed",
                 "Input",
                 new WeightChecker()
         );

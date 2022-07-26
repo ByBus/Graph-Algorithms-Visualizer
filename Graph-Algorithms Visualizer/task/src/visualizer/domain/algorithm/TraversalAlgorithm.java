@@ -14,7 +14,7 @@ abstract class TraversalAlgorithm implements Algorithm{
     protected final Set<VertexDataModel> visited = new HashSet<>();
     protected final Graph graph;
     protected Path path;
-    protected Action action = null;
+    protected Callback callback = null;
 
     public TraversalAlgorithm(Graph graph, Path path) {
         this.graph = graph;
@@ -40,14 +40,14 @@ abstract class TraversalAlgorithm implements Algorithm{
     }
 
     @Override
-    public void setAction(Action action) {
-        this.action = action;
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 
     @Override
     public void executeStepAction() {
         try {
-            action.onEveryStep();
+            callback.onEveryStep();
         } catch (InterruptedException ignored) {
         }
     }

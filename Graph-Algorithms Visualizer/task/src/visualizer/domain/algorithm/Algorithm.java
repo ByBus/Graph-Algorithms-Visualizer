@@ -8,14 +8,18 @@ public interface Algorithm {
 
     Path getPath();
 
-    void setAction(Action action);
+    void setCallback(Callback callback);
 
     void executeStepAction();
 
     void reset();
 
-    interface Action {
-        void onEveryStep() throws InterruptedException;
-        void onEnd(Path path);
+    interface Callback extends StepAction {
+        void onPathReady(Path path);
     }
+
+    interface StepAction {
+        void onEveryStep() throws InterruptedException;
+    }
+
 }

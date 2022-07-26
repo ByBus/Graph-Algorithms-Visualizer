@@ -7,7 +7,7 @@ public class AlgorithmWorkerFactory {
         this.algorithm = algorithm;
     }
 
-    public AlgorithmWorker getInstanceWithCallback(AlgorithmWorker.Callback callback) {
+    public AlgorithmWorker getInstanceWithCallback(AlgorithmWorker.WorkerCallback callback) {
         return new AlgorithmWorker(algorithm, callback);
     }
 }

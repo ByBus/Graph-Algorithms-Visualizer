@@ -25,7 +25,7 @@ public class GraphCanvasAdapter {
             var startVertex = getExistingVertexUi(startVertexDM);
             componentList.add(0, startVertex);
             adjacent.forEach((endVertexDM, weight) -> {
-                var edge = new Edge(startVertex, getExistingVertexUi(endVertexDM), weight);
+                var edge = new Edge(startVertex, getExistingVertexUi(endVertexDM), weight, graph.isDirected(startVertexDM, endVertexDM));
                 componentList.add(edge);
                 if (endVertexDM.isShowLabel()) {
                     componentList.add(1, edge.label());

@@ -13,18 +13,18 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
     public Dijkstra(Graph graph, Path path) {
         super(graph, path);
     }
-    private VertexDataModel startVertex = null;
-    private Path savedPath = null;
+    private VertexDataModel startCached = null;
+    private Path pathCached = null;
 
     @Override
-    public void traverse(VertexDataModel clickedVertex) {
-        if (startVertex == null) {
-            startVertex = clickedVertex;
+    public void traverse(VertexDataModel start) {
+        if (startCached == null) {
+            startCached = start;
             HashMap<VertexDataModel, Distance> distances = prepareDistances();
-            path.addVertex(clickedVertex);
+            path.addVertex(start);
 
-            Distance startDistance = new Distance(clickedVertex, 0);
-            distances.put(clickedVertex, startDistance);
+            Distance startDistance = new Distance(start, 0);
+            distances.put(start, startDistance);
             priorityQueue.offer(startDistance);
 
             while (priorityQueue.peek() != null) {
@@ -33,34 +33,32 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
                 for (var neighbor : neighbors) {
                     int newDistance = distances.get(current.vertex).distance + neighbor.distance;
                     if (newDistance < distances.get(neighbor.vertex).distance) {
-                        var previousConnectedVertex = distances.get(neighbor.vertex).vertex;
                         distances.put(neighbor.vertex, new Distance(current.vertex, newDistance));
                         executeStepAction();
                         path.addEdge(current.vertex, neighbor.vertex, newDistance);
-                        //path.removeEdge(neighbor.vertex, previousConnectedVertex);
+
                         priorityQueue.offer(neighbor);
                     }
                 }
-                //visited.add(current.vertex);
             }
         }
-        if (!startVertex.equals(clickedVertex)) {
-            findPath(clickedVertex);
+        if (!startCached.equals(start)) {
+            findPath(start);
         }
     }
 
     private void findPath(VertexDataModel end) {
-        savedPath = path;
+        pathCached = path;
         path = ((ShortestPath) path).findShortestPath(end);
-        action.onEnd(path);
+        callback.onPathReady(path);
     }
 
     @Override
     public Path getPath() {
         Path result = path;
-        if (savedPath != null) {
-            path = savedPath;
-            savedPath = null;
+        if (pathCached != null) {
+            path = pathCached;
+            pathCached = null;
         }
         return result;
     }
@@ -83,7 +81,7 @@ public class Dijkstra extends TraversalAlgorithm implements Algorithm {
     @Override
     public void reset() {
         super.reset();
-        startVertex = null;
+        startCached = null;
         priorityQueue.clear();
     }
 

@@ -10,8 +10,6 @@ public interface Path {
 
     void addEdge(VertexDataModel start, VertexDataModel end, int weight);
 
-    void removeEdge(VertexDataModel start, VertexDataModel end);
-
     @Override
     String toString();
 

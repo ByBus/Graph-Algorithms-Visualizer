@@ -45,7 +45,11 @@ public class Vector2D implements Comparable<Vector2D>{
     }
 
     public double angleBetweenRad(Vector2D other) {
-        return Math.cos(scalar(other) / (modulus * other.modulus));
+        return Math.acos(scalar(other) / (modulus * other.modulus));
+    }
+
+    public double dotProduct(Vector2D other) {
+        return modulus * other.modulus * Math.cos(angleBetweenRad(other));
     }
 
     public Vector2D multiplyByNumber(double number) {

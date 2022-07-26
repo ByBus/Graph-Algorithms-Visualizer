@@ -54,9 +54,9 @@ public class TraverseGraphUseCase implements Command {
         }
     }
 
-    private final AlgorithmWorker.Callback callback = new AlgorithmWorker.Callback() {
+    private final AlgorithmWorker.WorkerCallback callback = new AlgorithmWorker.WorkerCallback() {
         @Override
-        public void onResult(Path path) {
+        public void onResultReady(Path path) {
             canvas.updateComponents(path.toComponents());
         }
 
