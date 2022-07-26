@@ -1,5 +1,6 @@
 package visualizer.data;
 
+import visualizer.data.checker.IndexChecker;
 import visualizer.data.checker.PositiveNumberChecker;
 import visualizer.domain.usecases.Dialog;
 import visualizer.presenter.InputCircleGraphPresetDialog;
@@ -19,7 +20,7 @@ public class TestGraphData {
     );
 
     private final InputCircleGraphPresetDialog circleParametersDialog =
-            new InputCircleGraphPresetDialog("Input parameters of the Graph", new PositiveNumberChecker());
+            new InputCircleGraphPresetDialog("Input parameters of the Graph", new PositiveNumberChecker(), new IndexChecker());
 
     public TestGraphData(Graph graph, Observer... observers) {
         this.graph = graph;
@@ -224,7 +225,7 @@ public class TestGraphData {
             @Override
             public void onSuccess(String index) {
                 int[] params = Arrays.stream(index.split(";")).mapToInt(Integer::parseInt).toArray();
-                circleGraph(params[0], params[1], params[2], params[3], 'A');
+                circleGraph(params[0], params[1], params[2], params[3], (char) params[4]);
             }
 
             @Override
