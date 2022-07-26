@@ -1,6 +1,5 @@
 package visualizer.presenter;
 
-import visualizer.data.checker.IndexChecker;
 import visualizer.domain.usecases.Dialog;
 
 import javax.swing.*;
@@ -51,19 +50,20 @@ public class InputCircleGraphPresetDialog implements Dialog {
         pane.createDialog(null, title).setVisible(true);
         try {
             int result = (int) pane.getValue();
-            var inputs = List.of(numberOfVerticesInput, skipVerticesInput, connectVerticesInput, rotateFigureAngleInput);
+            var numberInputs = List.of(numberOfVerticesInput, skipVerticesInput, connectVerticesInput, rotateFigureAngleInput);
             if (result == JOptionPane.CANCEL_OPTION) {
                 callback.onCancel();
-            } else if (inputs.stream().map(JTextComponent::getText).allMatch(checker::check) &&
+            } else if (numberInputs.stream().map(JTextComponent::getText).allMatch(checker::check) &&
                     indexChecker.check(startIndexInput.getText())) {
                 String startIndex = String.valueOf((int) startIndexInput.getText().charAt(0));
-                callback.onSuccess(Stream.concat(inputs.stream().map(JTextComponent::getText), Stream.of(startIndex))
-                        .collect(Collectors.joining(";")));
+                callback.onSuccess(Stream.concat(numberInputs.stream().map(JTextComponent::getText), Stream.of(startIndex))
+                        .collect(Collectors.joining(";"))
+                );
             } else {
                 callback.onFailed();
             }
         } catch (Exception e) {
-            System.out.println("Dialog was closed");
+            System.out.println("Dialog was closed with cross-button");
         }
     }
 

@@ -5,6 +5,7 @@ import visualizer.data.checker.IndexChecker;
 import visualizer.data.checker.MultiChecker;
 import visualizer.data.checker.UniqueVertexChecker;
 import visualizer.data.checker.WeightChecker;
+import visualizer.data.preset.*;
 import visualizer.domain.*;
 import visualizer.domain.algorithm.*;
 import visualizer.domain.usecases.*;
@@ -31,7 +32,7 @@ public class MainFrame extends JFrame implements Observer {
     private final GraphCanvasAdapter adapter = new GraphCanvasAdapter(canvas);
     private final Graph graph = new Graph();
     private final GraphHistory<SavableGraph.GraphState> graphHistory = new GraphHistory<>(graph);
-    private final TestGraphData presets = new TestGraphData(graph, this);
+    private final GraphPresetsController presets = new GraphPresetsController(graph, this);
 
     public MainFrame() {
         super("Graph-Algorithms Visualizer");
@@ -43,6 +44,13 @@ public class MainFrame extends JFrame implements Observer {
 
     private void init() {
         graph.addObserver(this);
+
+        presets.addPresets(new Candy(graph),
+                new Circle(graph),
+                new Default(graph),
+                new Maze(graph),
+                new PrimTest(graph),
+                new Rhombus(graph));
 
         MenuBar menu = new MenuBar();
         createPresetsMenu(menu);
@@ -70,7 +78,6 @@ public class MainFrame extends JFrame implements Observer {
         );
         LabelMaster progressLabelMaster = new LabelMaster(progressLabel);
         add(canvas);
-
 
         Command addVertexUseCase = new AddVertexUseCase(inputIndexInputDialog, graph);
         Command createEdgeUseCase = new CreateEdgeUseCase(inputWeightInputDialog, graph);
@@ -173,12 +180,12 @@ public class MainFrame extends JFrame implements Observer {
 
     private void createPresetsMenu(MenuBar menu) {
         Command none = new NoneUseCase();
-        Map<String, ActionListener> presetsMenuItems = presets.graphsNames().stream()
+        Map<String, ActionListener> presetsMenuItems = presets.presetsNames().stream()
                 .collect(Collectors.toMap(
                         name -> name,
                         name -> e -> {
                             commandController.setCommand(none);
-                            presets.draw(name);
+                            presets.create(name);
                         },
                         (a, b) -> b)
                 );
