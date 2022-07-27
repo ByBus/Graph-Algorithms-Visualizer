@@ -51,9 +51,7 @@ public class Graph extends SavableGraph implements Observable {
 
     public void removeVertex(VertexDataModel vertex) {
         Map<VertexDataModel, Integer> edges = getAdjacent(vertex);
-        for (var edge : edges.entrySet()) {
-            getAdjacent(edge.getKey()).remove(vertex);
-        }
+        graph.keySet().forEach(k -> graph.get(k).remove(vertex));
         graph.remove(vertex);
         notifyObservers();
     }
